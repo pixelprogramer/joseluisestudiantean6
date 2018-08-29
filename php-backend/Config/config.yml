@@ -1,0 +1,25 @@
+dbal:
+    default: pgsql
+    pgsql:
+        driver: pdo_pgsql
+        host: 192.168.0.3
+        port: 5432
+        dbname: sabersaidb
+        user: postgres
+        password: P0stgressql
+        charset: UTF8
+    mysql:
+        driver: pdo_mysql
+        host: localhost
+        port: 5432
+        dbname: joseluis_db
+        user: root
+        password: ''
+        charset: UTF8
+
+swiftmailer:
+    transport: smtp.gmail.com
+    host: mail.google.com
+    username: no-reply@lostreseditores.com
+    password: Osiris123
+    spool: { type: memory }

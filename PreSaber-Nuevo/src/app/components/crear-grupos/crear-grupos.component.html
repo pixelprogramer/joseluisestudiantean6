@@ -1,0 +1,115 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<app-card [title]="'Crear Grupos'">
+  <div>
+    <h4 class="sub-title">Descripcion</h4>
+    <input class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion"
+           #descripcionExamen="ngModel"
+           [ngStyle]="{'border': objCurso.cursdescripv== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+           [(ngModel)]="objCurso.cursdescripv">
+    <button (click)="crearGrupo()" class="btn btnPropio" style="width: 100%; margin-top: 10px"
+            [disabled]="objCurso.cursdescripv == ''">Cargar <div *ngIf="objCurso.cursdescripv == ''">🔐</div>
+    </button>
+    <button (click)="actualizarCurso()" class="btn btnPropio" style="width: 100%; margin-top: 10px"
+            >Actualizar
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="input-group" style="padding-top: 10px">
+        <input type="text" class="form-control" placeholder="Filtrar por grado"
+               [(ngModel)]="filtroGrado">
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button"
+                  (click)="filtrarGrupo()"><a style="font-size: 10px">🔎</a>
+          </button>
+        </div>
+      </div>
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 20px">
+        <div class="col-md-12" style="margin-top: 5px" id="loaderTablaGrado">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px" id="loader1">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+
+        <table id="scr-vrt-dt" class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%; margin-top: 10px">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 144.45px;">
+              Codigo
+            </th>
+            <th style="width: 144.45px;">
+              Grado
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let curso of listCurso" role="row" (click)="[modalCursosHijos.show(),seleccionarGrado(curso)]"
+              class="odd Tablas filaTabla">
+            <td>{{curso.cursidn}}</td>
+            <td>{{curso.cursdescripv}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>
+
+<app-modal-basic #modalCursosHijos [hideHeader]="true" [hideFooter]="true">
+  <div class="app-modal-body">
+    <h3>Se selecciono el grupo: <small style="color: green">{{objCurso.cursdescripv}}</small></h3>
+    <h4 class="sub-title">Descripcion</h4>
+    <input class="form-control" id="descripcionHijo" name="descripcion" placeholder="Descripcion"
+           #descripcionExamen="ngModel"
+           [ngStyle]="{'border': objCursoHijos.cursdescripv== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+           [(ngModel)]="objCursoHijos.cursdescripv">
+    <button (click)="crearHijosGrupo()" class="btn btnPropio" style="width: 100%; margin-top: 10px"
+            [disabled]="objCursoHijos.cursdescripv == ''">Cargar <div *ngIf="objCursoHijos.cursdescripv == ''">🔐</div>
+    </button>
+    <div class="dataTables_scrollBody"
+         style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 50px">
+      <div class="col-md-12" style="margin-top: 10px" id="loaderTablaHijos">
+        <div class="align-content-center">
+          <div class="preloader3" style="height: 0px; padding-top: 20px">
+            <div class="circ1 loader-warning"></div>
+            <div class="circ2 loader-warning"></div>
+            <div class="circ3 loader-warning"></div>
+            <div class="circ4 loader-warning"></div>
+          </div>
+        </div>
+      </div>
+
+
+      <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+             aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+        <thead>
+        <tr role="row" style="height: 0px;">
+          <th style="width: 144.45px;">
+            Codigo
+          </th>
+          <th style="width: 144.45px;">
+            Descripcion
+          </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let curso of listCursoHijos" role="row"
+            class="odd Tablas filaTabla">
+          <td>{{curso.cur_cursidn}}</td>
+          <td>{{curso.cursdescripv}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-modal-basic>

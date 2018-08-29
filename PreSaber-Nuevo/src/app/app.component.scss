@@ -1,0 +1,32 @@
+aside.pcoded-slider.ng-sidebar {
+  top: 56px;
+}
+
+.slimscroll-wrapper, .scroll-window {
+  width: 100% !important;
+}
+
+.userlist-box {
+  &.show {
+    display: -webkit-box;
+  }
+  &.hide {
+    display: none;
+  }
+}
+
+@media (max-width: 992px) {
+  #main_navbar{
+    z-index: 1000000;
+  }
+  .page-body{
+    margin-top: 30px;
+  }
+}
+
+.pcoded-navbar{
+ transition: 500ms;
+}
+.pcoded-content{
+  transition: 500ms;
+}

@@ -1,0 +1,154 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<div id="seccionPrincipal">
+  <app-card [title]="'Crear usuarios'">
+    <div class="row" id="datosBasicosCrearMenu">
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Documento</h4>
+        <input class="form-control" id="documento" name="descripcion" placeholder="Documento"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objUsuario.documento_usuario== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objUsuario.documento_usuario">
+      </div>
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Nombre</h4>
+        <input class="form-control" id="nombre" name="descripcion" placeholder="Nombre"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objUsuario.nombre_usuario== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objUsuario.nombre_usuario">
+      </div>
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Apellido</h4>
+        <input class="form-control" id="apellido" name="descripcion" placeholder="Apellido"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objUsuario.apellido_usuario== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objUsuario.apellido_usuario">
+      </div>
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Telefono</h4>
+        <input class="form-control" id="telefono" name="descripcion" placeholder="Telefonos"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objUsuario.telefono_usuario== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objUsuario.telefono_usuario">
+      </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Correo</h4>
+        <input class="form-control" id="correo" name="descripcion" placeholder="Correo"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objUsuario.correo_usuario== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objUsuario.correo_usuario">
+      </div>
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Rol</h4>
+        <select class="form-control"  style="width: 100%"
+                [ngStyle]="{'border': objUsuario.id_rol_fk_usuario == '' ? 'red solid 1px' : '#577928 solid 1px'}"
+                [(ngModel)]="objUsuario.id_rol_fk_usuario">
+          <option value="">Seleccione</option>
+          <option *ngFor="let rol of listRol" value="{{rol.id_rol}}">{{rol.descripcion_rol}}</option>
+        </select>
+      </div>
+      <div class="col-sm-3 col-md-3">
+        <h4 class="sub-title">Estado</h4>
+        <select class="form-control"
+                [ngStyle]="{'border': objUsuario.estado_usuario == '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+                [(ngModel)]="objUsuario.estado_usuario">
+          <option value="000">Seleccione</option>
+          <option value="ACTIVO">Activo</option>
+          <option value="INACTIVO">Inactivo</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-12" style="margin-top: 10px;" >
+      <div class="row" style="float: right; " id="botonesDatosBasicosCrearMenu">
+        <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio" id="btnCrearMenu"
+                (click)="crearUsuario()"
+                [disabled]="objUsuario.documento_usuario == '' || objUsuario.nombre_usuario == '' ||
+                objUsuario.apellido_usuario == '' || objUsuario.correo_usuario == '' ||
+                objUsuario.id_rol_fk_usuario == '000' || objUsuario.estado_usuario=='000'"
+              >
+          Crear usuario
+        </button>
+
+        <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio" id="btnActualizarMenu" (click)="actualizarUsuario()"
+                [disabled]="objUsuario.documento_usuario == '' || objUsuario.nombre_usuario == '' ||
+                objUsuario.apellido_usuario == '' || objUsuario.correo_usuario == '' ||
+                objUsuario.id_rol_fk_usuario == '000' || objUsuario.estado_usuario=='000'"
+        >Actualizar usuario
+        </button>
+      </div>
+    </div>
+  </app-card>
+  <div class="row">
+    <div class="col-sm-12">
+      <app-card [title]="'Tabla de usuarios'">
+        <div class="col-md-12" style="margin-top: 10px" id="loaderTablaMenu">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dataTables_scrollBody"
+             style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+          <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                 aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+            <thead>
+            <tr role="row" style="height: 0px;">
+              <th style="width: 144.45px;">
+                Documento
+              </th>
+              <th style="width: 144.45px;">
+                Nombres
+              </th>
+              <th style="width: 144.45px;">
+                Apellido
+              </th>
+              <th style="width: 70px;">
+                Telefono
+              </th>
+              <th style="width: 70px;">
+                Correo
+              </th>
+              <th style="width: 70px;">
+                Rol
+              </th>
+              <th style="width: 30px;">
+                Estado
+              </th>
+              <th style="width: 70px;">
+                Ultimo ingreso
+              </th>
+              <th style="width: 70px;">
+                Acciones
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let usuario of listUsuario" role="row" class="odd Tablas filaTabla">
+              <td>{{usuario.documento_usuario}}</td>
+              <td>{{usuario.nombre_usuario}}</td>
+              <td>{{usuario.apellido_usuario}}</td>
+              <td>{{usuario.telefono_usuario}}</td>
+              <td>{{usuario.correo_usuario}}</td>
+              <td><span class="pcoded-badge label label-success">{{usuario.descripcion_rol}}</span></td>
+              <td>{{usuario.estado_usuario}}</td>
+              <td>{{usuario.fecha_ultima_ingreso_usuario}}</td>
+
+              <td style="text-align: center">
+                <button class="btn botones-tablas btnPropio" style="font-size: 10px"
+                        (click)="seleccionarUsuario(usuario)"><i
+                  class="icofont icofont-ui-edit"></i></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>

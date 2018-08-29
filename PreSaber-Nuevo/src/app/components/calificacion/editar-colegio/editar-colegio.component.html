@@ -1,0 +1,106 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<div id="seccionPrincipal">
+  <app-card [title]="'Editar colegio'">
+    <div class="row" id="datosBasicosCrearMenu">
+      <div class="col-sm-4 col-md-4">
+        <h4 class="sub-title">Dane</h4>
+        <input class="form-control" id="nombre" name="descripcion" placeholder="Dane"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objColegio.colecoddanen== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objColegio.colecoddanen">
+      </div>
+      <div class="col-sm-4 col-md-4">
+        <h4 class="sub-title">Descripcion</h4>
+        <input class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion"
+               #descripcionExamen="ngModel"
+               [ngStyle]="{'border': objColegio.coledescripv== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               [(ngModel)]="objColegio.coledescripv">
+      </div>
+      <div class="col-sm-4 col-md-4">
+        <h4 class="sub-title">Lugar</h4>
+        <select class="form-control"
+                [ngStyle]="{'border': objLugar.lugacoddanen == '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+                [(ngModel)]="objLugar.lugacoddanen">
+          <option value="000">Seleccione</option>
+          <option *ngFor="let lugar of listLugar" value="{{lugar.lugacoddanen}}">{{lugar.lugadescripv}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-12" style="margin-top: 10px;" >
+      <div class="row" style="float: right; " id="botonesDatosBasicosCrearMenu">
+        <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio " id="btnCrearColegio"
+                (click)="crearColegio()"
+                [disabled]="objColegio.colecoddanen == '' || objColegio.coledescripv == '' ||  objLugar.lugacoddanen == '000'">
+          Crear colegio
+        </button>
+
+        <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio" id="btnActualizarColegio" (click)="actualizarColegio()"
+                [disabled]="objColegio.colecoddanen == '' || objColegio.coledescripv == '' ||  objLugar.lugacoddanen == '000'"
+        >Actualizar colegio
+        </button>
+      </div>
+    </div>
+  </app-card>
+  <div class="row">
+    <div class="col-sm-12">
+      <app-card [title]="'Tabla de colegios'">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Filtrar por codigo dane"
+                 [(ngModel)]="daneFiltro">
+          <div class="input-group-append">
+            <button class="btn btn-primary input-group-text" type="button" id="btnFiltrarColegio"
+                    (click)="filtrar()"><a style="font-size: 10px">🔎</a>
+            </button>
+          </div>
+        </div>
+        <div class="dataTables_scrollBody"
+             style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+          <div class="col-md-12" style="margin-top: 10px" id="loaderTablaColegios">
+            <div class="align-content-center">
+              <div class="preloader3" style="height: 0px; padding-top: 20px">
+                <div class="circ1 loader-warning"></div>
+                <div class="circ2 loader-warning"></div>
+                <div class="circ3 loader-warning"></div>
+                <div class="circ4 loader-warning"></div>
+              </div>
+            </div>
+          </div>
+
+          <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                 aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+            <thead>
+            <tr role="row" style="height: 0px;">
+              <th style="width: 144.45px;">
+                Dane
+              </th>
+              <th style="width: 144.45px;">
+                Descripcion
+              </th>
+              <th style="width: 144.45px;">
+                Lugar
+              </th>
+              <th style="width: 70px;">
+                Acciones
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let colegio of listColegio" role="row" class="odd Tablas filaTabla">
+              <td>{{colegio.colecoddanen}}</td>
+              <td>{{colegio.coledescripv}}</td>
+              <td>{{colegio.descripcionlugar}}</td>
+              <td style="text-align: center">
+                <button class="btn botones-tablas btnPropio" style="font-size: 10px"
+                        (click)="seleccionarColegio(colegio)"><i
+                  class="icofont icofont-ui-check"></i></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>
+

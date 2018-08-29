@@ -1,0 +1,131 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<app-card [title]="'Datos Basicos'">
+  <div class="col-md-12">
+    <h4 class="sub-title">descripcion categoria</h4>
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Nombre" disabled
+             value="{{objCategoriaMinutas.descripcion_categoria_minutas}}">
+      <div class="input-group-append">
+        <button class="btn btn-primary input-group-text" type="button"
+                (click)="categorias.show()"><a style="font-size: 15px">🔎</a>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12" style="margin-top: 10px;">
+    <div class="row" style="float: right; ">
+      <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio" id="btnCrearMenu"
+              (click)="crearCategoria()"
+              [disabled]="objCategoriaMinutas.id_tipo_pedido_minutas_fk == ''">
+        Crear categoria
+      </button>
+    </div>
+  </div>
+</app-card>
+
+<app-card [title]="'Lista de categorias'">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+        <div class="col-md-12" style="margin-top: 10px" id="loaderTablaCategoriaPropios">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 144.45px;">
+              Codigo
+            </th>
+            <th style="width: 144.45px;">
+              Descripcion
+            </th>
+            <th style="width: 70px;">
+              Acciones
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let tpl of listCategoria" role="row" class="odd Tablas filaTabla">
+            <td>{{tpl.id_categoria_minutas}}</td>
+            <td>{{tpl.descripcion_categoria_minutas}}</td>
+            <td style="text-align: center">
+              <button class="btn botones-tablas btnPropio" style="font-size: 10px"
+                      (click)="[seleccionarCategoria(tpl)]"><i
+                class="icofont icofont-ui-edit"></i></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>
+<!--Modals-->
+<app-modal-basic #categorias>
+  <div class="app-modal-header">
+    <h4 class="modal-title">lista de categorias disponibles</h4>
+    <button type="button" class="close basic-close" (click)="categorias.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="dataTables_scrollBody"
+             style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+          <div class="col-md-12" style="margin-top: 10px" id="loaderTablaCategoria">
+            <div class="align-content-center">
+              <div class="preloader3" style="height: 0px; padding-top: 20px">
+                <div class="circ1 loader-warning"></div>
+                <div class="circ2 loader-warning"></div>
+                <div class="circ3 loader-warning"></div>
+                <div class="circ4 loader-warning"></div>
+              </div>
+            </div>
+          </div>
+
+          <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                 aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+            <thead>
+            <tr role="row" style="height: 0px;">
+              <th style="width: 144.45px;">
+                Codigo
+              </th>
+              <th style="width: 144.45px;">
+                Descripcion
+              </th>
+              <th style="width: 70px;">
+                Acciones
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let tp of listTipoPedido" role="row" class="odd Tablas filaTabla">
+              <td>{{tp.id}}</td>
+              <td>{{tp.description}}</td>
+              <td style="text-align: center">
+                <button class="btn botones-tablas btnPropio" style="font-size: 10px"
+                        (click)="[seleccionarTipoPedido(tp),categorias.hide()]"><i
+                  class="icofont icofont-ui-check"></i></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-modal-basic>

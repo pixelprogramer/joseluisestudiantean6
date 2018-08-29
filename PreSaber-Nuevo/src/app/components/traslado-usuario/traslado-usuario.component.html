@@ -1,0 +1,82 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<app-card [title]="'Traslado de estudiantes'">
+  <div>
+    <h4 class="sub-title">Paquete</h4>
+    <input class="form-control" id="descripcion" name="descripcion" placeholder="Paquete"
+           #descripcionExamen="ngModel"
+           [ngStyle]="{'border': objTraslado.caliidn== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+           [(ngModel)]="objTraslado.caliidn">
+    <button (click)="cargarEstudiantes()" class="btn btnPropio" style="width: 100%; margin-top: 10px"
+            [disabled]="objTraslado.caliidn == ''">Cargar <div *ngIf="objTraslado.caliidn == ''">🔐</div>
+    </button>
+  </div>
+
+  <div class="row" style="margin-top: 10px">
+    <div class="col-sm-6" >
+      <h4 class="sub-title">Paquete nuevo</h4>
+      <input class="form-control" placeholder="Nuevo paquete" #newcaliidn [(ngModel)]="objTraslado.caliidnnew" >
+      <button class="btn btnPropio " style="width: 100%; margin-top: 5px" [disabled]="objTraslado.caliidnnew == ''"
+              (click)="cambiarUsuario()"  >Cambiar<div *ngIf="objTraslado.caliidnnew == ''">🔐</div>
+      </button>
+      <div class="input-group" style="padding-top: 10px">
+        <input type="text" class="form-control" placeholder="Filtrar por nombre de estudiante"
+               [(ngModel)]="filtroEstudiante">
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button"
+                  (click)="filtrarEstudiante()"><a style="font-size: 10px">🔎</a>
+          </button>
+        </div>
+      </div>
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 20px">
+        <div class="col-md-12" style="margin-top: 5px" id="loaderUsuario">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px" id="loader1">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+        <table id="scr-vrt-dt" class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%; margin-top: 10px">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 20px; max-width: 20px !important;">
+              Select
+            </th>
+            <th style="width: 144.45px;">
+              Codigo estudiante
+            </th>
+            <th style="width: 144.45px;">
+              Nombre Estudiante
+            </th>
+            <th style="width: 70px;">
+              Paquete
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let estudiante of listEstudiantes" role="row"
+              class="odd Tablas filaTabla">
+            <td><input class="btn btnPropio" type="checkbox" (click)="selectEstudiante(estudiante)"></td>
+            <td>{{estudiante.calixestuidn}}</td>
+            <td>{{estudiante.estunombrev}}</td>
+            <td>{{estudiante.caliidn}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4 class="sub-title">Usuario seleccionados</h4>
+      <h4 *ngFor="let usuarios of listEstudiantesSeleccionados; let i = index" >Usuario {{i+1}}:
+        <small style="color: red">{{usuarios.estunombrev}}</small>
+        con codigo:
+        <small style="color: red">{{usuarios.calixestuidn}}</small>
+      </h4>
+    </div>
+  </div>
+</app-card>

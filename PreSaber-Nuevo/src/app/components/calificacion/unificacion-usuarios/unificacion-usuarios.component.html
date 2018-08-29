@@ -1,0 +1,80 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<app-card [title]="'Unificacion de estudiantes'">
+  <div>
+    <h4 class="sub-title">Paquetes</h4>
+    <input class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion"
+           #descripcionExamen="ngModel"
+           [ngStyle]="{'border': cadenaPaquetes== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+           [(ngModel)]="cadenaPaquetes">
+    <button (click)="listarEstudiantesPaquetes()" class="btn btnPropio" style="width: 100%; margin-top: 10px"
+            [disabled]="cadenaPaquetes == ''">Cargar <div *ngIf="cadenaPaquetes == ''">🔐</div>
+    </button>
+    <button (click)="unificarEstudiantes()" class="btn btnPropio" style="width: 100%; margin-top: 10px" [disabled]="cantidadSeleccionados == 0"
+    >UnificarEstudiantes <div *ngIf="cantidadSeleccionados == 0">🔐</div>
+    </button>
+  </div>
+  <h4 style="margin-top: 10px">Cantidad de seleccionados: <small style="color: red"><strong>{{cantidadSeleccionados}}</strong></small></h4>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="input-group" style="padding-top: 10px">
+        <input type="text" class="form-control" placeholder="Filtrar por nombre de estudiante"
+               [(ngModel)]="filtroEstudiante">
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button"
+                  (click)="filtrarEstudiante()"><a style="font-size: 10px">🔎</a>
+          </button>
+        </div>
+      </div>
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 20px">
+        <div class="col-md-12" style="margin-top: 5px" id="loaderTablaEstudiante">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px" id="loader1">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+
+        <table id="scr-vrt-dt" class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%; margin-top: 10px">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 20px; max-width: 20px !important;">
+              Select
+            </th>
+            <th style="width: 144.45px;">
+              estunombrev
+            </th>
+            <th style="width: 144.45px;">
+              calixestuidn
+            </th>
+            <th style="width: 144.45px;">
+              estuidn
+            </th>
+            <th style="width: 144.45px;">
+              caliidn
+            </th>
+
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let estudiante of listEstudiantes" role="row"
+              class="odd Tablas filaTabla">
+            <td><input type="checkbox" (click)="selectEstudiante(estudiante)"></td>
+            <td>{{estudiante.estunombrev}}</td>
+            <td>{{estudiante.calixestuidn}}</td>
+            <td>{{estudiante.estuidn}}</td>
+            <td>{{estudiante.caliidn}}</td>
+
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>

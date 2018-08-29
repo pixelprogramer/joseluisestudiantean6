@@ -1,0 +1,501 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<app-card [title]="'Realizar pedido'" id="seccionPedido">
+  <div class="row datosSuperiores" style="margin-top: 10px">
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Dane</h4>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Codigo dane" value="{{objColegio.dane}}"
+               [ngStyle]="{'border': objOrder.id_school== '' ? 'red solid 1px' : '#577928 solid 1px'}" disabled>
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button"
+                  (click)="buscarColegio()"><a style="font-size: 8px">🔎</a>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Colegio</h4>
+      <input class="form-control" name="descripcion" placeholder="Nombre" value="{{objColegio.description}}"
+             [ngStyle]="{'border': objOrder.id_school== '' ? 'red solid 1px' : '#577928 solid 1px'}" disabled
+      >
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Telefono</h4>
+      <input class="form-control" name="descripcion" placeholder="Telefono colegio" #telefono="ngModel"
+             [(ngModel)]="objColegio.phone"
+             [ngStyle]="{'border': objOrder.id_school== '' ? 'red solid 1px' : '#577928 solid 1px'}" disabled>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Tipo</h4>
+      <select class="form-control"
+              [ngStyle]="{'border': objOrderType.id== '000' ? 'red solid 1px' : '#577928 solid 1px'}" (change)="calcularFechaEnvio()"
+              [(ngModel)]="objOrderType.id">
+        <option value="000">Seleccione</option>
+        <option *ngFor="let orderType of listOrderType" value="{{orderType.id}}">{{orderType.description}}</option>
+      </select>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Material</h4>
+      <select class="form-control"
+              [ngStyle]="{'border': objOrder.material== '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+              [(ngModel)]="objOrder.material">
+        <option value="000">Seleccione</option>
+        <option value="INVENTARIO">INVENTARIO</option>
+        <option value="CON PREMARCADO">CON PREMARCADO</option>
+        <option value="CON PLAN B">CON PLAN B</option>
+        <option value="CON CUADERNILLO">CON CUADERNILLO</option>
+        <option value="SIN CUADERNILLO">SIN CUADERNILLO</option>
+      </select>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Transportadora</h4>
+      <select class="form-control"
+              [ngStyle]="{'border': objShipping.id== '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+              [(ngModel)]="objShipping.id">
+        <option value="000">Seleccione</option>
+        <option *ngFor="let Shipping of listShipping" value="{{Shipping.id}}">{{Shipping.description}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px" class="row datosSuperiores">
+    <div class="col-md-2">
+      <h4 class="sub-title">Fecha aplicacion</h4>
+      <form class="form-inline">
+        <div class="form-group" style="width: 100%">
+          <div class="input-group">
+            <input class="form-control"  placeholder="yyyy-mm-dd" name="dp" [minDate]="minDate"  [(ngModel)]="fechaAplicacion" ngbDatepicker (ngModelChange)="validarFecha()" [disabled]="objOrderType.id =='000'"
+                   #d="ngbDatepicker">
+            <div class="input-group-append bg-default" (click)="d.toggle()" >
+              <label class="input-group-text" ><span class="icofont icofont-ui-calendar" ></span></label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Fecha de envio  <strong style="color: green" *ngIf="diasHabilesTexto !=''">{{diasHabilesTexto}}</strong></h4>
+      <input class="form-control" name="descripcion" placeholder="Fecha de envio"
+             [ngStyle]="{'border': objOrder.date_ship== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+             #envio="ngModel" [(ngModel)]="objOrder.date_ship" disabled>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Tipo envio</h4>
+      <select class="form-control"
+              [ngStyle]="{'border': objShippingType.id== '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+              [(ngModel)]="objShippingType.id">
+        <option value="000">Seleccione</option>
+        <option *ngFor="let shippingType of listShippingType" value="{{shippingType.id}}">{{shippingType.description}}
+        </option>
+      </select>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Envio</h4>
+      <div>
+        <input style="width: 100%" type="text" class="form-control" placeholder="Seleccione una opcion de envio"
+               [ngStyle]="{'border': objOrder.ship_name== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               #envio="ngModel" [(ngModel)]="objOrder.ship_name">
+        <div class="input-group-append" style="margin-top: 5px">
+          <button class="btn btn-primary input-group-text" style="margin-right: 5px; width: 33%; padding-left: 1%;"
+                  type="button"
+                  (click)="cargarEnvio(1)"><a style="font-size: 14px">Distribuidor</a>
+          </button>
+          <button class="btn btn-primary input-group-text" style="margin-right: 5px; width: 33%; padding-left: 3%;"
+                  type="button"
+                  (click)="cargarEnvio(2)"><a style="font-size: 14px">Colegio</a>
+          </button>
+          <button class="btn btn-primary input-group-text" style="width: 33%; padding-left: 3%;" type="button"
+                  (click)="cargarEnvio(3)"><a style="font-size: 14px">Otros</a>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Enviado a</h4>
+      <input class="form-control" name="descripcion" placeholder="Enviado a"
+             [ngStyle]="{'border': objOrder.ship_to== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+             #envio="ngModel" [(ngModel)]="objOrder.ship_to">
+
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Direccion</h4>
+      <input class="form-control" name="descripcion" placeholder="Direccion"
+             [ngStyle]="{'border': objOrder.ship_address== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+             #envio="ngModel" [(ngModel)]="objOrder.ship_address">
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Telefono</h4>
+      <input class="form-control" name="descripcion" placeholder="Telefono"
+             [ngStyle]="{'border': objOrder.ship_phone== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+             #envio="ngModel" [(ngModel)]="objOrder.ship_phone">
+    </div>
+    <div class="col-sm-12 col-md-2">
+      <h4 class="sub-title">Ciudad</h4>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Ciudad" id="camCitis"
+               [ngStyle]="{'border': objCities.id== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               value="{{objCities.description}}">
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button" id="btnBuscarCitis"
+                  (click)="buscarCiudad()"><a style="font-size: 8px">🔎</a>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btnPropio" id="btnSubirListas" (click)="subirListas()">Subir listas</button>
+    </div>
+    <div class="col-md-12" style="margin-top: 10px">
+      <button class="btn btnPropio" id="btnCrearPedido" (click)="crearPedido()">Crear pedido</button>
+    </div>
+  </div>
+</app-card>
+
+
+<!--Seccion listas-->
+<app-card [title]="'Subir listas'" id="seccionSubirListas">
+  <div class="row">
+    <div class="col-md-12 regresar">
+      <i (click)="regresarPedidoListas()" style="
+      float: right;
+    font-size: 31px;
+    color: #23282D;" class="ti-arrow-left ">
+        <small>Regresar</small>
+      </i>
+    </div>
+  </div>
+  <hr/>
+  <div class="row" style="margin-top: 10px">
+    <div class="col-md-12">
+      <div class="sub-title">Cargar archivo</div>
+      <label class="custom-file" style="border: greenyellow solid 1px !important;">
+        <input type="file"  (change)="cargarArchivos($event)" name="archivo[]" multiple class="custom-file-input" >
+        <span class="custom-file-control">Seleccionar</span>
+      </label>
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="dataTables_scrollBody"
+               style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 5px">
+            <table id="scr-vrt-dt" class="table table-striped table-bordered nowrap dataTable" role="grid"
+                   aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+              <thead>
+              <tr role="row" style="height: 0px;">
+                <th style="width: 20px">
+                  Codigo
+                </th>
+                <th style="width: 20px">
+                  Nombre
+                </th>
+                <th style="width: 20px">
+                  Tipo
+                </th>
+                <th style="width: 10px">
+                  Error
+                </th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr *ngFor="let archivos1 of archivos; let i = index" role="row" class="odd Tablas">
+                <td>{{i+1}}</td>
+                <td>{{archivos1.name}}</td>
+                <td>
+                  <img src="../../../../assets/images/tipoArchivos/{{archivos1.tipo}}.png">
+                </td>
+                <td [ngStyle]="{'background': archivos1.estado == 'true' ? 'rgba(11, 218, 81,0.50)' : 'rgba(255, 0, 0,0.50)' }"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</app-card>
+
+<!--Seccion colegios-->
+<app-card [title]="'Colegios'" id="seccionColegios">
+  <div class="row">
+    <div class="col-md-12 regresar">
+      <i (click)="regresarPedido()" style="
+      float: right;
+    font-size: 31px;
+    color: #23282D;" class="ti-arrow-left ">
+        <small>Regresar</small>
+      </i>
+    </div>
+  </div>
+  <hr/>
+  <button style="width: 100%" class="btn btn-warning">Crear colegio no existente</button>
+  <div class="input-group" style="margin-top: 10px">
+    <input type="text" class="form-control" placeholder="Filtrar por codigo dane" #filtroDane="ngModel"
+           [(ngModel)]="filtro">
+    <div class="input-group-append">
+      <button class="btn btn-primary input-group-text" type="button"
+              (click)="filtrarColegio()"><a style="font-size: 8px">🔎</a>
+      </button>
+    </div>
+  </div>
+  <div class="dataTables_scrollBody"
+       style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+    <div class="col-md-12" style="margin-top: 10px" id="loaderTablaColegios">
+      <div class="align-content-center">
+        <div class="preloader3" style="height: 0px; padding-top: 20px">
+          <div class="circ1 loader-warning"></div>
+          <div class="circ2 loader-warning"></div>
+          <div class="circ3 loader-warning"></div>
+          <div class="circ4 loader-warning"></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+           aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+      <thead>
+      <tr role="row" style="height: 0px;">
+        <th style="width: 144.45px;">
+          Id
+        </th>
+        <th style="width: 144.45px;">
+          Dane
+        </th>
+        <th style="width: 144.45px;">
+          Nombre
+        </th>
+        <th style="width: 70px;">
+          Telefono
+        </th>
+        <th style="width: 70px;">
+          Ciudad
+        </th>
+        <th style="width: 70px;">
+          Departamento
+        </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let colegios of listColegio" role="row" class="odd Tablas filaTabla"
+          (click)="seleccionarColegio(colegios)">
+        <td>{{colegios.id}}</td>
+        <td>{{colegios.dane}}</td>
+        <td style="text-align: left">{{colegios.description}}</td>
+        <td>{{colegios.phone}}</td>
+        <td>{{colegios.ciudad}}</td>
+        <td>{{colegios.departamento}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</app-card>
+<!--Seccion ciudades-->
+<app-card [title]="'Ciudades'" id="seccionCiuda">
+  <div class="row">
+    <div class="col-md-12 regresar">
+      <i (click)="regresarPedidoCiudad()" style="
+      float: right;
+    font-size: 31px;
+    color: #23282D;" class="ti-arrow-left ">
+        <small>Regresar</small>
+      </i>
+    </div>
+  </div>
+  <hr/>
+
+  <div class="input-group" style="margin-top: 10px">
+    <input type="text" class="form-control" placeholder="Filtrar nombre ciudad" #filtroDane="ngModel"
+           [(ngModel)]="filtroCiudad">
+    <div class="input-group-append">
+      <button class="btn btn-primary input-group-text" type="button"
+              (click)="filtrarCiudad()"><a style="font-size: 8px">🔎</a>
+      </button>
+    </div>
+  </div>
+  <div class="dataTables_scrollBody"
+       style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+    <div class="col-md-12" style="margin-top: 10px" id="loaderTablaCiudades">
+      <div class="align-content-center">
+        <div class="preloader3" style="height: 0px; padding-top: 20px">
+          <div class="circ1 loader-warning"></div>
+          <div class="circ2 loader-warning"></div>
+          <div class="circ3 loader-warning"></div>
+          <div class="circ4 loader-warning"></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+           aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+      <thead>
+      <tr role="row" style="height: 0px;">
+
+        <th style="width: 144.45px;">
+          Nombre
+        </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let ciudad of listCities" role="row" class="odd Tablas filaTabla" (click)="seleccionarCiudad(ciudad)">
+        <td>{{ciudad.description}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</app-card>
+
+<!--Seccion detalle pedidos-->
+<app-card [title]="'Detalle pedido'" id="seccionDetallePedido">
+  <div class="row">
+    <div class="col-md-12 regresar">
+      <i (click)="regresarPedidoDetalle()" style="
+      float: right;
+    font-size: 31px;
+    color: #23282D;" class="ti-arrow-left ">
+        <small>Regresar</small>
+      </i>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Lista de productos</h4>
+      <div class="input-group" style="margin-top: 10px">
+        <input type="text" class="form-control" placeholder="Filtrar por codigo / descripcion" #filtroDane="ngModel"
+               [(ngModel)]="filtroProducto">
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button"
+                  (click)="filtrarProductos()"><a style="font-size: 8px">🔎</a>
+          </button>
+        </div>
+      </div>
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+        <div class="col-md-12" style="margin-top: 10px" id="loaderProductos">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 144.45px;">
+              Codigo
+            </th>
+            <th style="width: 144.45px;">
+              Descripcion
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let productos of listProductos" role="row" class="odd Tablas filaTabla"
+              (click)="[seleccopnarProducto(productos),cantidadProducto.show()]">
+            <td>{{productos.code}}</td>
+            <td>{{productos.description}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Tus pedidos</h4>
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+        <div class="col-md-12" style="margin-top: 10px" id="loaderTableDetallePedido">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 144.45px;">
+              Descripcion
+            </th>
+            <th style="width: 144.45px;">
+              Cantidad
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let orderDetails of listOrderDetails" role="row" class="odd Tablas filaTabla"
+              (click)="[seleccionarDetalleEditar(orderDetails),cantidadProducto.show()]">
+            <td>{{orderDetails.descripcion_producto}}</td>
+            <td>{{orderDetails.quantity_order}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>
+<!--Modals-->
+<app-modal-basic #cantidadProducto>
+  <div class="app-modal-header">
+    <h4 class="modal-title">Cantidades del productos: {{objProductos.description}}</h4>
+    <button type="button" class="close basic-close" (click)="cantidadProducto.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <h4 class="sub-title">Grado</h4>
+        <input class="form-control" name="descripcion" placeholder="Nombre"
+               [ngStyle]="{'border': objOrderDetails.description== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               #descripcionDetalle="ngModel"
+               [(ngModel)]="objOrderDetails.description">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <h4 class="sub-title">Cantidad</h4>
+        <input class="form-control" name="descripcion" placeholder="Nombre"
+               [ngStyle]="{'border': objOrderDetails.quantity_order== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+               #descripcionDetalle="ngModel"
+               [(ngModel)]="objOrderDetails.quantity_order">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <button class="btn btnPropio" style="width: 100%" (click)="[agregarDetalle(),cantidadProducto.hide()]"
+                id="btnAgregarDetallePedido">Agregar detalle
+        </button>
+      </div>
+      <div class="col-sm-12 col-md-12" style="margin-top: 10px">
+        <button class="btn btnPropio" style="width: 100%" (click)="[editarDetallePedido(),cantidadProducto.hide()]"
+                id="btnEditarDetallePedido">Editar detalle
+        </button>
+      </div>
+      <div class="col-sm-12 col-md-12" style="margin-top: 10px">
+        <button class="btn btnPropio" style="width: 100%" (click)="[eliminarDetallePedido(),cantidadProducto.hide()]"
+                id="btnEliminarDetallePedido">Eliminar detalle
+        </button>
+      </div>
+    </div>
+  </div>
+
+</app-modal-basic>
+

@@ -1,0 +1,97 @@
+.botones-tablas{
+
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+.Tablas td{
+  text-align: center;
+  padding: 0px;
+}
+
+.loaderExcel{
+  background: rgba(255,255,255,0.6);
+  width: 100%;
+  height: 1000px;
+  position: absolute;
+  z-index: 1000;
+  text-align: center;
+}
+.contenedorImagenExcel{
+  margin-top: 200px;
+}
+
+.filaTabla{
+  cursor: pointer;
+
+}
+.filaTabla:hover{
+  background: rgba(255, 0, 0,0.26);
+}
+.filaTabla:active{
+  background: rgba(84, 217, 140,0.26);
+}
+
+.flechasMenus{
+  font-size: 15px;
+}
+.flechasMenus:hover{
+  font-size: 20px;
+  color: black;
+  transition: 200ms;
+  cursor: pointer;
+}
+.styiloCabezera:hover
+{
+  font-size: 20px !important;
+  color: black !important;
+  transition: 200ms !important;
+  cursor: pointer !important;
+}
+.categoria{
+  color: #0073AA;
+}
+.categoria:hover{
+  font-size: 18px;
+  color: #7FB9D4;
+  cursor: pointer;
+}
+.subMenu{
+  color: black;
+  list-style-type:circle;
+}
+.subMenu:hover{
+  font-size: 20px;
+  color: #7FB9D4;
+  cursor: pointer;
+}
+.plusCategoria{
+  color: limegreen; margin-left: 10px
+}
+.plusCategoria:hover{
+  font-size: 22px;
+  color: black;
+}
+
+.test.mostrarR:hover{
+  display: block;
+}
+.esconderHIden{
+  overflow: hidden;
+  height: 500px;
+}
+.btnTablas{
+  padding-left: 10px;
+  font-size: 14px;
+  color: #4297C0;
+}
+.btnTablas:hover{
+  font-size: 16px;
+  color: #000;
+}
+.btnPropio{
+  background: #4297C0;
+  color: white;
+}
+
+

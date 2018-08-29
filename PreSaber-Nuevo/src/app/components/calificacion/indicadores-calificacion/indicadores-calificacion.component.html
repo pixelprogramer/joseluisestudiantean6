@@ -1,0 +1,23 @@
+<app-card title="Indicadores Calificacion-Premarcado">
+<div class="row">
+  <div class="col-md-12" style="text-align: center">
+    <h4 class="sub-title">Rango de fechas</h4>
+    <div class="scrollmenu">
+      <ngb-datepicker #dp ngModel (ngModelChange)="onDateChange($event)" [displayMonths]="2" [dayTemplate]="t"></ngb-datepicker>
+
+      <ng-template #t let-date="date" let-focused="focused" >
+              <span class="custom-range"
+                    [class.focused]="focused"
+                    [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                    [class.faded]="isHovered(date) || isInside(date)"
+                    (mouseenter)="hoveredDate = date"
+                    (mouseleave)="hoveredDate = null">
+                {{ date.day }}
+              </span>
+      </ng-template>
+    </div>
+    <pre class="m-t-20">Rango de fechas seleccionado: {{ parserFormatter.format(fromDate) }} al {{ parserFormatter.format(toDate) }}</pre>
+    <button class="btn btnPropio" style="width: 100%" id="btnGenerarReporte" (click)="generarReporte()">Generar reporte</button>
+  </div>
+</div>
+</app-card>

@@ -1,0 +1,78 @@
+<app-card [title]="'Informacion'">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div >
+        <div class="col-md-12" style="margin-top: 5px" id="loaderInformacion">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px" id="loader1">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h4>{{cantidadHojas}}/{{hojaActual}}</h4>
+          </div>
+          <div class="col-md-4">
+          <h4>Cantidad de colegios: <small>{{cantidadColegios}}</small></h4>
+          </div>
+          <div class="col-md-4">
+            <h4>Cantidad de estudiantes: <small>{{cantidadEstudiantes}}</small></h4>
+          </div>
+        </div>
+
+        <table id="scr-vrt-dt" class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%; margin-top: 10px">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 144.45px;">
+              Fecha
+            </th>
+            <th style="width: 144.45px;">
+              Distribuidor
+            </th>
+            <th style="width: 144.45px;">
+              Dane
+            </th>
+            <th style="width: 144.45px;">
+              Colegio
+            </th>
+            <th style="width: 144.45px;">
+              Tipo
+            </th>
+            <th style="width: 144.45px;">
+              Proceso
+            </th>
+            <th style="width: 144.45px;">
+              Detalles
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let info of listaFinal" role="row"
+              class="odd Tablas filaTabla">
+            <td>{{info.createdAt}}</td>
+            <td>{{info.name}} {{info.surname}}</td>
+            <td>{{info.schdane}}</td>
+            <td style="max-width: 100px !important; white-space: pre-wrap">{{info.schdescription}}</td>
+            <td [ngStyle]="{'background': info.otdescription =='LIBROS' ? '#F54749': info.otdescription ==
+            'CUADERNILLOS' ? '#F1EE01': info.otdescription == 'PREMARCADOS' ? '#11B0EC' :
+            info.otdescription == 'CALIFICACIONES' ? '#47EA39': info.otdescription == 'CAPACITACIONES' ? '#F5A12E':'#C1C1C1'}">{{info.otdescription}}</td>
+            <td [ngStyle]="{'background': info.state =='ACTIVO' ? '#47EA39':'#11B0EC'}">{{info.state}}</td>
+            <td ><div *ngFor="let detalle of info.detalles">
+              <div class="estiloP" [innerHtml]="detalle | safeHtml"></div>
+            </div></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>
+
+

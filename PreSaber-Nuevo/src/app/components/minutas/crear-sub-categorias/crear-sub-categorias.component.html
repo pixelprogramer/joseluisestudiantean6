@@ -1,0 +1,99 @@
+<div class="col-xl-3 col-lg-12 push-xl-0">
+  <!-- Search box card start -->
+  <div class="card" style="overflow: hidden">
+    <div class="card-header">
+      <h5 class="card-header-text">Arbol de categorias</h5></div>
+    <div class="card-body p-t-10">
+      <div class="task-right">
+        <div class="accordion-block scale-accordion">
+          <div>
+            <div class="accordion-panel">
+              <div class="accordion-heading">
+                <h5>Categoria seleccionada: <small style="color: red">{{objCategoria.descripcion_categoria_minutas}}</small></h5>
+                <div class="task-right-header-status">
+                  <span data-toggle="collapse">Categorias</span>
+                  <i class="icofont icofont-rounded-down f-right"></i>
+                </div>
+              </div>
+              <div class="accordion-content">
+                <ul>
+                  <li *ngFor="let cate of listSubCategorias" class="categoria" (click)="seleccionarCategoria(cate)">{{cate.descripcion_categoria_minutas}}
+                    <i  (click)="[nuevaAccion(),modalAcciones.show()]" class="ti-plus plusCategoria"></i>
+                    <ol *ngFor="let sub of cate.sub_categorias">
+                      <li class="subMenu" (click)="seleccionarAcciones(sub)">{{sub.descripcion_acciones_minutas}}
+                        <span *ngIf="sub.estado_acciones_minutas == 'ACTIVO'"></span>
+                        <span *ngIf="sub.estado_acciones_minutas != 'ACTIVO'">🔐</span>
+                      </li>
+                    </ol>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end of task-right-revision -->
+      </div>
+      <!-- end of sidebar-right -->
+    </div>
+    <!-- end of card-body -->
+  </div>
+  <!-- Search box card end -->
+</div>
+
+<app-modal-basic #modalAcciones>
+  <div class="app-modal-header">
+    <h4 class="modal-title">lista de acciones disponibles</h4>
+    <button type="button" class="close basic-close" (click)="modalAcciones.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="app-modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="dataTables_scrollBody"
+             style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+          <div class="col-md-12" style="margin-top: 10px" id="loaderTablaAcciones">
+            <div class="align-content-center">
+              <div class="preloader3" style="height: 0px; padding-top: 20px">
+                <div class="circ1 loader-warning"></div>
+                <div class="circ2 loader-warning"></div>
+                <div class="circ3 loader-warning"></div>
+                <div class="circ4 loader-warning"></div>
+              </div>
+            </div>
+          </div>
+
+          <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                 aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+            <thead>
+            <tr role="row" style="height: 0px;">
+              <th style="width: 144.45px;">
+                Codigo
+              </th>
+              <th style="width: 144.45px;">
+                Descripcion
+              </th>
+              <th style="width: 70px;">
+                Acciones
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let accion of listAcciones" role="row" class="odd Tablas filaTabla">
+              <td>{{accion.id_acciones_minutas}}</td>
+              <td>{{accion.descripcion_acciones_minutas}}</td>
+              <td style="text-align: center">
+                <button style="font-size: 11px" class="btn botones-tablas btnPropio"
+                        (click)="[agregarAccion(accion),modalAcciones.hide()]"><i
+                  class="icofont icofont-ui-check"></i></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-modal-basic>

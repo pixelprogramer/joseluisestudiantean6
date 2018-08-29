@@ -1,0 +1,141 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+
+<div id="pcoded" class="pcoded iscollapsed" theme-layout="vertical" vertical-placement="left" vertical-layout="wide">
+  <div class="pcoded-overlay-box"></div>
+  <div class="pcoded-container navbar-wrapper">
+    <nav class="navbar header-navbar pcoded-header" header-theme="theme4" pcoded-header-position="fixed">
+      <div class="navbar-wrapper">
+        <div class="navbar-logo" navbar-theme="theme4">
+
+          <a [routerLink]="['/']">
+            <img class="img-fluid" src="assets/images/tipoArchivos/logo_lte.png" alt="Theme-Logo"/>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="pcoded-main-container" style="margin-top: 56px;">
+      <div class="pcoded-wrapper">
+        <nav id="main_navbar" class=" pcoded-navbar" navbar-theme="themelight1" active-item-theme="theme4" style="height: 50% !important;"
+             sub-item-theme="theme2" active-item-style="style0" pcoded-navbar-position="fixed"
+             pcoded-header-position="fixed">
+          <div class="sidebar_toggle"><a href="javascript:;"><i class="icon-close icons"></i></a></div>
+          <div class="pcoded-inner-navbar main-menu" appAccordion>
+            <perfect-scrollbar [style.max-width]="'100%'" [style.max-height]="'calc(100vh - 56px)'" >
+              <div *ngFor="let cabezera of listMenuTodo">
+
+                <div class="pcoded-navigatio-lavel styiloCabezera" menu-title-theme="theme5" (click)="seleccionarEncabezado(cabezera)">{{cabezera.descripcion_cabezera}}
+                  <i *ngIf="estadoFlechas == true" class="ti-arrow-circle-up flechasMenus"
+                     (click)="cambiarPrioridadCabezera('arriba',cabezera)"></i>
+                  <i *ngIf="estadoFlechas == true" class="ti-arrow-circle-down flechasMenus"
+                     (click)="cambiarPrioridadCabezera('abajo',cabezera)"></i>
+                </div>
+
+
+                <ul *ngFor="let sub of cabezera.subMenus" class="pcoded-item pcoded-left-item" item-border="none"
+                    item-border-style="solid"
+                    subitem-border="solid" appAccordionLink group="dashboard">
+                  <li class="pcoded-hasmenu" dropdown-icon="style1"
+                      subitem-icon="style6" appAccordionLink group="dashboard">
+                    <a href="javascript:;" appAccordionToggle (click)="eliminarSubMenuMenu(sub)">
+                      <span class="pcoded-micon"><i class="{{sub.icono}}"></i></span>
+                      <span class="pcoded-mtext">{{sub.descripcion_menu}}</span>
+                      <span *ngIf="sub.estado_menu != 'ACTIVO'" class="pcoded-badge label label-danger">{{sub.estado_menu}}</span>
+                    </a>
+
+                  </li>
+                  <div *ngIf="estadoFlechas == true" style="text-align: center">
+                    <i class="ti-arrow-circle-up flechasMenus"
+                       (click)="cambiarPrioridadSubMenu('arriba',sub,cabezera)"></i>
+                    <i class="ti-arrow-circle-down flechasMenus"
+                       (click)="cambiarPrioridadSubMenu('abajo',sub,cabezera)"></i>
+                  </div>
+                </ul>
+
+              </div>
+            </perfect-scrollbar>
+          </div>
+        </nav>
+        <div class="pcoded-content">
+          <div class="pcoded-inner-content">
+            <div class="main-body">
+              <!--Menu muestra-->
+              <div class="page-wrapper">
+                <div class="page-body" style="background: white;" >
+                  <div class="col-sm-3 col-md-12" style="position: fixed; background: white; height: 100%;margin-top: 10px">
+                    <h4 class="sub-title">Permiso</h4>
+                    <select class="form-control"  style="width: 50%"
+                            [ngStyle]="{'border': objRol.id_rol == '' ? 'red solid 1px' : '#577928 solid 1px'}"
+                            [(ngModel)]="objRol.id_rol" (change)="motrarMenu()">
+                      <option value="">Seleccione</option>
+                      <option *ngFor="let rol of listRol" value="{{rol.id_rol}}">{{rol.descripcion_rol}}</option>
+                    </select>
+                    <div class="row" style="margin-top: 10px">
+                      <div class="col-md-2">
+                        <h4 class="sub-title">Mostrar flechas de prioridad</h4>
+                        <div class="input-group">
+                          <ui-switch class="js-single" color="#1abc9c" switchColor="#fff" size="small"
+                                     [(ngModel)]="estadoFlechas"></ui-switch>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <h4 class="sub-title">Nueva cabezera</h4>
+                        <div class="input-group">
+                          <ui-switch class="js-single" color="#1abc9c" switchColor="#fff" size="small"
+                                     [(ngModel)]="nuevaCabezera"></ui-switch>
+                        </div>
+                      </div>
+                      <div class="col-md-2" *ngIf="nuevaCabezera == true">
+                        <h4 class="sub-title">Nombre cabezera</h4>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="objCabezera.descripcion_cabezera"
+                                 value="{{objCabezera.descripcion_cabezera}}">
+                          <div class="input-group-append">
+                            <button class="btn btn-primary input-group-text" type="button"
+                                    (click)="crearCabezera()">...
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h4 class="sub-title">Items menu<h6 style="color: red">{{nombreCabezera}}</h6></h4>
+                        <nav id="main_navbar" class=" pcoded-navbar" navbar-theme="themelight1"
+                             active-item-theme="theme4" style="width: 240px !important; height: 500px; background: gray"
+                             sub-item-theme="theme2" active-item-style="style0" pcoded-navbar-position="fixed"
+                             pcoded-header-position="fixed">
+                          <div class="sidebar_toggle"><a href="javascript:;"><i class="icon-close icons"></i></a></div>
+                          <div class="pcoded-inner-navbar main-menu" appAccordion>
+                            <perfect-scrollbar [style.max-width]="'100%'" [style.max-height]="'calc(100vh - 56px)'"
+                                             >
+                              <ul *ngFor="let sub of listMenu" class="pcoded-item pcoded-left-item" item-border="none"
+                                  item-border-style="solid"
+                                  subitem-border="solid" appAccordionLink group="dashboard">
+                                <li class="pcoded-hasmenu" dropdown-icon="style1"
+                                    subitem-icon="style6" appAccordionLink group="dashboard">
+                                  <a href="javascript:;" appAccordionToggle (click)="seleccionSubMenu(sub)">
+                                    <span class="pcoded-micon"><i class="{{sub.icono}}"></i></span>
+                                    <span class="pcoded-mtext">{{sub.descripcion_menu}}</span>
+                                    <span *ngIf="sub.estado_menu != 'ACTIVO'" class="pcoded-badge label label-danger">{{sub.estado_menu}}</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </perfect-scrollbar>
+                          </div>
+                        </nav>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

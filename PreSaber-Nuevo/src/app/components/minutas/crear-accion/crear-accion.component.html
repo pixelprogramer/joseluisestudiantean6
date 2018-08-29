@@ -1,0 +1,101 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<app-card [title]="'Crear nuevas acciones'">
+  <div class="row">
+    <div class="col-sm-3 col-md-2">
+      <h4 class="sub-title">Descripcion</h4>
+      <input class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion"
+             #descripcionExamen="ngModel"
+             [ngStyle]="{'border': objAcciones.descripcion_acciones_minutas== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+             [(ngModel)]="objAcciones.descripcion_acciones_minutas">
+    </div>
+    <div class="col-sm-3 col-md-2">
+      <h4 class="sub-title">Estado</h4>
+      <select class="form-control"
+              [ngStyle]="{'border': objAcciones.estado_acciones_minutas== '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+              [(ngModel)]="objAcciones.estado_acciones_minutas">
+        <option value="000">Seleccione</option>
+        <option value="ACTIVO">Activo</option>
+        <option value="INACTIVO">Inactivo</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <h4 class="sub-title">Obligatorio seleccionar pedido</h4>
+      <div class="input-group">
+        <ui-switch class="js-single" color="#1abc9c" switchColor="#fff" size="small" checked
+                   [(ngModel)]="objAcciones.seleccion_pedido_accion"></ui-switch>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12" style="margin-top: 10px;">
+    <div class="row" style="float: right; ">
+      <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio" id="btnCrearAccion"
+              (click)="crearAccion()"
+              [disabled]="objAcciones.estado_acciones_minutas== '000' || objAcciones.descripcion_acciones_minutas == ''">
+        Crear accion
+      </button>
+
+      <button style="padding: 5px; margin: 5px" class="btn btn-sm btnPropio" id="btnActualizarAccion"
+              (click)="actualizarAccion()"
+      >Actualizar accion
+      </button>
+    </div>
+  </div>
+</app-card>
+<app-card [title]="'Lista de acciones'">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="dataTables_scrollBody"
+           style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+        <div class="col-md-12" style="margin-top: 10px" id="loaderTablaCategoriaAcciones">
+          <div class="align-content-center">
+            <div class="preloader3" style="height: 0px; padding-top: 20px">
+              <div class="circ1 loader-warning"></div>
+              <div class="circ2 loader-warning"></div>
+              <div class="circ3 loader-warning"></div>
+              <div class="circ4 loader-warning"></div>
+            </div>
+          </div>
+        </div>
+
+        <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+               aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+          <thead>
+          <tr role="row" style="height: 0px;">
+            <th style="width: 144.45px;">
+              Codigo
+            </th>
+            <th style="width: 144.45px;">
+              Descripcion
+            </th>
+            <th style="width: 144.45px;">
+              Obligatorio seleccionar pedido
+            </th>
+            <th style="width: 70px;">
+              Acciones
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let acciones of listAcciones" role="row" class="odd Tablas filaTabla">
+            <td>{{acciones.id_acciones_minutas}}</td>
+            <td>{{acciones.descripcion_acciones_minutas}}</td>
+            <td>
+              <div  [ngStyle]="{'color':acciones.seleccion_pedido_accion == '1' || acciones.seleccion_pedido_accion == true ? 'green':'red'}"
+                   class="col-sm-12 col-md-6 col-lg-4 col-xl-3 outer-ellipsis" style="font-size: 17px"><i
+                [class]="acciones.seleccion_pedido_accion == '1' || acciones.seleccion_pedido_accion == true ? 'ti-check':'ti-close'"
+              ></i>
+              </div>
+            </td>
+            <td style="text-align: center; font-size: 10px">
+              <button class="btn botones-tablas btnPropio"
+                      (click)="[seleccionarAccion(acciones)]"><i
+                class="icofont icofont-ui-edit"></i></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</app-card>

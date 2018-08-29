@@ -1,0 +1,315 @@
+<ng2-toasty [position]="position"></ng2-toasty>
+<div class="row">
+  <!--Control de minutas-->
+  <div class="col-xl-3 col-lg-3 push-xl-0">
+    <!-- Search box card start -->
+    <div class="card" style="overflow: hidden">
+      <div class="card-header">
+        <h5 class="card-header-text">Nueva minuta</h5></div>
+      <div class="card-body p-t-10">
+        <div class="task-right">
+          <div class="accordion-block scale-accordion">
+            <div>
+              <div  class="accordion-panel">
+                <div class="accordion-heading">
+                  <div class="task-right-header-status">
+                    <span>Opciones</span>
+                  </div>
+                </div>
+                <div class="accordion-content">
+                  <input class="form-control"  placeholder="Descripcion otra actividad" id="noPermitidoInput"
+                         [ngStyle]="{'border': objRegistroMinutas.descripcion_minuta== '' ? 'red solid 1px' : '#577928 solid 1px'}"
+                         #otraActividad="ngModel" [(ngModel)]="objRegistroMinutas.descripcion_minuta">
+                  <button  (click)="iniciarTarea()" style="width: 100%; margin-top: 5px" [disabled]="objAcciones.id_acciones_minutas == ''
+                  || objRegistroMinutas.estado_minuta == 'SINTERMINAR'
+                  || objRegistroMinutas.estado_minuta == 'TERMINADOF'
+                  || objAcciones.id_acciones_minutas==''" class="btn btn-lg btn-success"><span *ngIf="objRegistroMinutas.estado_minuta == 'DETENIDA'">Continuar tarea</span> <span *ngIf="objRegistroMinutas.estado_minuta != 'DETENIDA'">Iniciar tarea</span>
+                    <div *ngIf="objAcciones.id_acciones_minutas == ''
+                  || objRegistroMinutas.estado_minuta == 'SINTERMINAR'
+                  || objRegistroMinutas.estado_minuta == 'TERMINADOF'
+                  || objAcciones.id_acciones_minutas==''">🔐</div></button>
+
+
+                  <button (click)="modalObservacionMinutas.show()" style="width: 100%; margin-top: 5px" [disabled]="objRegistroMinutas.estado_minuta == 'DETENIDA' || objRegistroMinutas.id_registro_minutas =='' || objRegistroMinutas.estado_minuta == 'TERMINADOF'" class="btn btn-lg btn-warning">Detener tarea
+                    <div *ngIf="objRegistroMinutas.estado_minuta == '' || objRegistroMinutas.estado_minuta == 'DETENIDA' || objRegistroMinutas.id_registro_minutas =='' || objRegistroMinutas.estado_minuta == 'TERMINADOF'">🔐</div></button>
+
+
+                  <button   (click)="terminarMinuta()" style="width: 100%; margin-top: 5px" [disabled]="objRegistroMinutas.estado_minuta == 'DETENIDA' || objRegistroMinutas.estado_minuta == 'TERMINADOF' || objRegistroMinutas.id_registro_minutas ==''" class="btn btn-lg btn-danger">Terminar tarea
+                    <div *ngIf="objRegistroMinutas.estado_minuta == 'DETENIDA' || objRegistroMinutas.id_registro_minutas =='' || objRegistroMinutas.estado_minuta == 'TERMINADOF' ">🔐</div></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of task-right-revision -->
+        </div>
+        <!-- end of sidebar-right -->
+      </div>
+      <!-- end of card-body -->
+
+    </div>
+  </div>
+
+  <!--Tabla pedidos-->
+  <div class="col-xl-9 col-lg-9 push-xl-0">
+    <app-card [title]="'Tus minutas'">
+      <div class="row" *ngIf="validacion==1">
+        <div class="col-sm-12">
+          <div class="dataTables_scrollBody"
+               style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+
+
+            <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                   aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+              <thead>
+              <tr role="row" style="height: 0px;">
+                <th style="width: 144.45px;">
+                  Codigo
+                </th>
+                <th style="width: 144.45px;">
+                  Codigo Pedido
+                </th>
+                <th style="width: 70px;">
+                  Descripcion
+                </th>
+                <th style="width: 70px;" >
+                  Estado Actual
+                </th>
+                <th style="width: 70px;">
+                  Hora inicio
+                </th>
+                <th style="width: 70px;">
+                  Hora final
+                </th>
+                <th style="width: 70px;">
+                  Accion
+                </th>
+                <th style="width: 70px;">
+                  Total de horas
+                </th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr *ngFor="let mxu of listRegistroMinutasxUsuario" role="row" class="odd Tablas filaTabla test" (click)="seleccionarMinuta(mxu)">
+                <td>{{mxu.registro.id_registro_minutas}}</td>
+                <td>{{mxu.registro.codigo_pedido_minutas}}</td>
+                <td *ngIf="mxu.registro.seleccion_pedido_accion =='1'">{{mxu.registro.descripcion_pedido_minutas}}</td>
+                <td *ngIf="mxu.registro.seleccion_pedido_accion !='1'">{{mxu.registro.descripcion_minuta}}</td>
+                <td  [ngStyle]="{'background': mxu.registro.estado_minuta == 'DETENIDA' ? 'rgb(244, 208, 63)' :
+                 mxu.registro.estado_minuta == 'SINTERMINAR' ? 'rgb(237, 118, 105)' : 'rgb(144, 230, 181)'}" >{{mxu.registro.estado_minuta}}</td>
+                <td>{{mxu.registro.fecha_hora_inicio_minuta}}</td>
+                <td>{{mxu.registro.fecha_hora_fin_minuta}}</td>
+                <td>{{mxu.registro.descripcion_acciones_minutas}}</td>
+                <td>{{mxu.registro.horas_totales}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
+<div class="row">
+  <!--Acciones y Categorias-->
+  <div class="col-xl-3 col-lg-3 push-xl-0">
+    <!-- Search box card start -->
+    <div class="card" style="overflow: hidden">
+      <div class="card-header">
+        <h5 class="card-header-text">Arbol de categorias</h5></div>
+      <div class="card-body p-t-10">
+        <div class="task-right">
+          <div class="accordion-block scale-accordion">
+            <div>
+              <div  class="accordion-panel">
+                <div class="accordion-heading">
+                  <h5>Categoria seleccionada:
+                    <strong style="color: red">{{objCategoria.descripcion_categoria_minutas}}</strong>
+                  </h5>
+                  <h5>Accion seleccionada:
+                    <strong style="color: red">{{objAcciones.descripcion_acciones_minutas}}</strong>
+                  </h5>
+                  <div class="task-right-header-status">
+                    <span>Categorias</span>
+                  </div>
+                </div>
+                <div class="accordion-content">
+                  <ul>
+                    <li *ngFor="let cate of listSubCategorias" class="categoria" (click)="seleccionarCategoria(cate)">
+                      {{cate.descripcion_categoria_minutas}}
+                      <ol *ngFor="let sub of cate.sub_categorias">
+                        <li class="subMenu" (click)="seleccionarAcciones(sub)">{{sub.descripcion_acciones_minutas}}
+                          <span *ngIf="sub.estado_acciones_minutas == 'ACTIVO'"></span>
+                          <span *ngIf="sub.estado_acciones_minutas != 'ACTIVO'">🔐</span>
+                        </li>
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of task-right-revision -->
+        </div>
+        <!-- end of sidebar-right -->
+      </div>
+      <!-- end of card-body -->
+
+    </div>
+  </div>
+  <!--Tabla pedidos-->
+  <div class="col-xl-9 col-lg-9 push-xl-0">
+    <app-card [title]="'En que pedido trabajas'" [cardClass]="'esconderHIden'">
+      <div class="row" style="text-align: center" id="noPermitido">
+        <div class="col-md-12" style="    font-size: 200px;
+    position: absolute;
+    z-index: 20;
+    padding-bottom: 100%;
+    background: rgba(126, 143, 157,0.85);
+    padding-top: 100px;">
+          <h4 style="color: white">Esta accion no requiere pedido</h4>
+          ⛔
+        </div>
+      </div>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Filtrar por codigo de pedido"
+               [(ngModel)]="codigoFiltro">
+        <div class="input-group-append">
+          <button class="btn btn-primary input-group-text" type="button"
+                  (click)="filtrarPedido()"><a style="font-size: 10px">🔎</a>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="dataTables_scrollBody"
+               style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+            <div class="col-md-12" style="margin-top: 10px" id="loaderTablaPedido">
+              <div class="align-content-center">
+                <div class="preloader3" style="height: 0px; padding-top: 20px">
+                  <div class="circ1 loader-warning"></div>
+                  <div class="circ2 loader-warning"></div>
+                  <div class="circ3 loader-warning"></div>
+                  <div class="circ4 loader-warning"></div>
+                </div>
+              </div>
+            </div>
+
+            <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                   aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+              <thead>
+              <tr role="row" style="height: 0px;">
+                <th style="width: 144.45px;">
+                  Codigo
+                </th>
+                <th style="width: 144.45px;">
+                  Codigo Pedido
+                </th>
+                <th style="width: 70px;">
+                  Descripcion
+                </th>
+                <th style="width: 70px;">
+                  Distribuidor
+                </th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr *ngFor="let pedido of listPedidoDetalle" role="row" class="odd Tablas filaTabla test"
+                  (click)="[seleccionarPedido(pedido),modalDetallesPedido.show()]">
+                <td>{{pedido.pedido.id_orden}}</td>
+                <td>{{pedido.pedido.code}}</td>
+                <td>{{pedido.pedido.description}}<strong *ngIf="pedido.pedido.id_order_type =='8'">-{{pedido.pedido.observations}}</strong></td>
+                <td>{{pedido.pedido.name}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<app-modal-basic #modalDetallesPedido>
+  <div class="app-modal-header">
+    <h4 class="modal-title">Lista de detalles del pedido con codigo: <strong
+      style="color: red">{{objPedido.code}}</strong></h4>
+    <h6>Categoria seleccionada: <strong style="color: limegreen">{{objCategoria.descripcion_categoria_minutas}}</strong>
+    </h6>
+    <h6>Accion seleccionada: <strong style="color: limegreen">{{objAcciones.descripcion_acciones_minutas}}</strong></h6>
+    <button style="width: 100%" class="btn btn-lg btnPropio" (click)="[cargarDetalle(),modalDetallesPedido.hide()]"> Cargar detalles</button>
+    <button type="button" class="close basic-close" (click)="modalDetallesPedido.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="app-modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <h6>Cantidad seleccionados: <strong style="color: rgb(127, 185, 212)">{{cantidadSeleccionados}}</strong>
+        </h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="dataTables_scrollBody"
+             style="position: relative; overflow: auto; max-height: 400px; width: 100%; margin-top: 10px">
+          <table class="table table-striped table-bordered nowrap dataTable" role="grid"
+                 aria-describedby="scr-vrt-dt_info" style="width: 100%;">
+            <thead>
+            <tr role="row" style="height: 0px;">
+              <th style="width: 30px; max-width: 30px !important;">
+                Select
+              </th>
+              <th style="width: 144.45px;">
+                Producto
+              </th>
+              <th style="width: 20px;">
+                Descripcion
+              </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let detalle of listDetalle" role="row" class="odd Tablas filaTabla">
+              <td><input type="checkbox"  (click)="selectDetalle(detalle)"></td>
+              <td>{{detalle.prod_description}}</td>
+              <td>{{detalle.description}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-modal-basic>
+<app-modal-basic #modalObservacionMinutas>
+  <div class="app-modal-header">
+    <h4 class="modal-title">¿Por que detienes la minuta?</h4>
+  </div>
+  <div class="app-modal-body">
+    <div class="col-sm-3 col-md-12">
+      <h4 class="sub-title">Categoria no conforme</h4>
+      <select class="form-control" (change)="listarNoConformes()"
+              [ngStyle]="{'border': objCategoriaNoConformes.id== '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+              [(ngModel)]="objCategoriaNoConformes.id">
+        <option value="000">Seleccione</option>
+        <option *ngFor="let cnoc of listCategoriaNoConformmes" value="{{cnoc.id}}">{{cnoc.description}}</option>
+      </select>
+      <select class="form-control" *ngIf="objCategoriaNoConformes.id != '000'" style="margin-top: 10px"
+              [ngStyle]="{'border': objNoConformes.id== '000' ? 'red solid 1px' : '#577928 solid 1px'}"
+              [(ngModel)]="objNoConformes.id">
+        <option value="000">Seleccione</option>
+        <option *ngFor="let noc of listNoConformes" value="{{noc.id}}-{{noc.description}}">{{noc.description}}</option>
+      </select>
+    </div>
+      <h4 style="margin-top: 10px" class="sub-title">Observacion</h4>
+  <textarea class="form-control" #observacion [(ngModel)]="objRegistroMinutas.observacion_minuta" name="objservacion"></textarea>
+    <button (click)="[detenerMinuta(),modalObservacionMinutas.hide()]" style="width: 100%; margin-top: 5px" [disabled]="objNoConformes.id == '000' || objCategoriaNoConformes.id =='000'" class="btn btn-lg btnPropio">Detener tarea
+      <div *ngIf="objNoConformes.id =='000' || objCategoriaNoConformes.id =='000'">🔐</div></button>
+
+  </div>
+
+</app-modal-basic>

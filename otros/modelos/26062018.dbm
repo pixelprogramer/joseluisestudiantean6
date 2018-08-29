@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.8.2" last-position="0,0" last-zoom="1"
+	 default-schema="public" default-owner="postgres">
+<database name="new_database">
+</database>
+
+<schema name="public" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="seguridad" rect-visible="true" fill-color="#ff0000">
+	<role name="postgres"/>
+</schema>
+
+<table name="usuario">
+	<schema name="seguridad"/>
+	<role name="postgres"/>
+	<position x="36" y="58"/>
+	<column name="id_usuario" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="documento_usuario">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="nombre_usuario">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="apellido_usuario">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="telefono_usuario">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="correo_usuario">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="id_rol_fk_usuario">
+		<type name="integer"/>
+	</column>
+	<column name="estado_usuario">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="contrasena_usuario">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="fecha_creacion_usuario">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_usuario">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_ultima_ingreso_usuario">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_usuario_id" type="pk-constr" table="seguridad.usuario">
+		<columns names="id_usuario" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="rol">
+	<schema name="seguridad"/>
+	<role name="postgres"/>
+	<position x="397" y="47"/>
+	<column name="id_rol" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion_rol">
+		<type name="varchar" length="150"/>
+	</column>
+	<column name="estado_rol">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="fecha_creacion_rol">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_rol">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_rol_id" type="pk-constr" table="seguridad.rol">
+		<columns names="id_rol" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="cabezera">
+	<schema name="seguridad"/>
+	<role name="postgres"/>
+	<position x="717" y="37"/>
+	<column name="id_cabezera" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion_cabezera">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="estado_cabezera">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="fecha_creacion_cabezera">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_cabezera">
+		<type name="timestamp"/>
+	</column>
+	<column name="id_rol_fk_cabezera">
+		<type name="integer"/>
+	</column>
+	<column name="prioridad_cabezera">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_cabezera_id" type="pk-constr" table="seguridad.cabezera">
+		<columns names="id_cabezera" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="submenu">
+	<schema name="seguridad"/>
+	<role name="postgres"/>
+	<position x="715" y="215"/>
+	<column name="id_submenu" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="id_cabezera_fk_submenu">
+		<type name="integer"/>
+	</column>
+	<column name="id_menu_fk_submenu">
+		<type name="integer"/>
+	</column>
+	<column name="estado_submenu">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="prioridad_submenu">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_submenu" type="pk-constr" table="seguridad.submenu">
+		<columns names="id_submenu" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="menu">
+	<schema name="seguridad"/>
+	<role name="postgres"/>
+	<position x="1078" y="201"/>
+	<column name="id_menu" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion_menu">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="nombre_componente_menu">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="ruta_menu">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="estado_menu">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="fecha_creacion_menu">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_menu">
+		<type name="timestamp"/>
+	</column>
+	<column name="icono">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="pagina_defecto">
+		<type name="varchar" length="100"/>
+	</column>
+	<constraint name="pk_id_menu" type="pk-constr" table="seguridad.menu">
+		<columns names="id_menu" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<schema name="configuracion" rect-visible="true" fill-color="#0000ff">
+	<role name="postgres"/>
+</schema>
+
+<table name="log_lte">
+	<schema name="configuracion"/>
+	<role name="postgres"/>
+	<position x="53" y="394"/>
+	<column name="id_log" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="fecha_creacion_log">
+		<type name="timestamp"/>
+	</column>
+	<column name="descripcion_log">
+		<type name="text"/>
+	</column>
+	<column name="id_accion_log">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="id_usuario_fk_log">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_id_log" type="pk-constr" table="configuracion.log_lte">
+		<columns names="id_log" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<schema name="minutas" rect-visible="true" fill-color="#00ff00">
+	<role name="postgres"/>
+</schema>
+
+<table name="registro_minutas">
+	<schema name="minutas"/>
+	<role name="postgres"/>
+	<position x="35" y="730"/>
+	<column name="id_registro_minutas" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="fecha_creacion_minuta">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_hora_inicio_minuta">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_hora_fin_minuta">
+		<type name="timestamp"/>
+	</column>
+	<column name="horas_totales">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="observacion_minuta">
+		<type name="text"/>
+	</column>
+	<column name="estado_minuta">
+		<type name="varchar" length="150"/>
+	</column>
+	<column name="id_usuario_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<column name="id_acciones_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<column name="id_pedido_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_registro_minutas_fk" type="pk-constr" table="minutas.registro_minutas">
+		<columns names="id_registro_minutas" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<schema name="mantenimiento" rect-visible="true" fill-color="#00ffff">
+	<role name="postgres"/>
+</schema>
+
+<table name="reporte_danos">
+	<schema name="mantenimiento"/>
+	<role name="postgres"/>
+	<position x="894" y="442"/>
+	<column name="id_reporte_dano" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion_reporte_danos">
+		<type name="text"/>
+	</column>
+	<column name="fecha_creacion_reporte_danos">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_reporte_danos">
+		<type name="timestamp"/>
+	</column>
+	<column name="id_tipo_dano_fk">
+		<type name="integer"/>
+	</column>
+	<column name="id_tipo_elemento_fk">
+		<type name="integer"/>
+	</column>
+	<column name="id_usuario_reporte_danos_fk">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_reporte_danos_id" type="pk-constr" table="mantenimiento.reporte_danos">
+		<columns names="id_reporte_dano" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tipo_dano">
+	<schema name="mantenimiento"/>
+	<role name="postgres"/>
+	<position x="1278" y="439"/>
+	<column name="id_tipo_dano" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion">
+		<type name="varchar" length="250"/>
+	</column>
+	<constraint name="pk_tipo_dano_id" type="pk-constr" table="mantenimiento.tipo_dano">
+		<columns names="id_tipo_dano" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="elemento">
+	<schema name="mantenimiento"/>
+	<role name="postgres"/>
+	<position x="890" y="618"/>
+	<column name="id_elemento" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="id_tipo_elemento_fk">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_elemento_id" type="pk-constr" table="mantenimiento.elemento">
+		<columns names="id_elemento" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tipo_elemento">
+	<schema name="mantenimiento"/>
+	<role name="postgres"/>
+	<position x="1260" y="626"/>
+	<column name="id_tipo_elemento" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion">
+		<type name="varchar" length="250"/>
+	</column>
+	<constraint name="pk_tipo_elemento_id" type="pk-constr" table="mantenimiento.tipo_elemento">
+		<columns names="id_tipo_elemento" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="categoria_minutas">
+	<schema name="minutas"/>
+	<role name="postgres"/>
+	<position x="530" y="725"/>
+	<column name="id_categoria_minutas" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="id_tipo_pedido_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<column name="descripcion_categoria_minutas">
+		<type name="varchar" length="250"/>
+	</column>
+	<constraint name="pk_categoria_minutas_id" type="pk-constr" table="minutas.categoria_minutas">
+		<columns names="id_categoria_minutas" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="sub_categoria_minutas">
+	<schema name="minutas"/>
+	<role name="postgres"/>
+	<position x="445" y="805.7"/>
+	<column name="id_sub_menu_minutas" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion_sub_categoria">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="fecha_creacion_sub_categoria_minutas">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_sub_categoria_minutas">
+		<type name="timestamp"/>
+	</column>
+	<column name="id_accion_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<column name="id_categoria_sub_menu_fk">
+		<type name="integer"/>
+	</column>
+	<column name="id_usuario_sub_categoria_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_sub_menu_minutas_id" type="pk-constr" table="minutas.sub_categoria_minutas">
+		<columns names="id_sub_menu_minutas" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="acciones_minutas">
+	<schema name="minutas"/>
+	<role name="postgres"/>
+	<position x="473" y="975.55"/>
+	<column name="id_acciones_minutas" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="descripcion_acciones_minutas">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="seleccion_pedido_accion">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="fecha_creacion_acciones_minutas">
+		<type name="timestamp"/>
+	</column>
+	<column name="fecha_actualizacion_acciones_minutas">
+		<type name="timestamp"/>
+	</column>
+	<column name="estado_acciones_minutas">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="id_usuario_acciones_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_acciones_minutas_id" type="pk-constr" table="minutas.acciones_minutas">
+		<columns names="id_acciones_minutas" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="pedidos_minutas">
+	<schema name="minutas"/>
+	<role name="postgres"/>
+	<position x="29" y="955"/>
+	<column name="id_pedido_minutas" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="codigo_pedido_minutas">
+		<type name="varchar" length="150"/>
+	</column>
+	<column name="descripcion_pedido_minutas">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="cantidad_calificacion_pedido_minutas">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="cantidad_premarcado_pedido_minutas">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="cantidad_logistica_pedido_minutas">
+		<type name="varchar" length="250"/>
+	</column>
+	<constraint name="pk_pedido_minutas_id" type="pk-constr" table="minutas.pedidos_minutas">
+		<columns names="id_pedido_minutas" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="detalle_pedido_usuario">
+	<schema name="minutas"/>
+	<role name="postgres"/>
+	<position x="64" y="1172"/>
+	<column name="id_detalle_pedido_usuario" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="json_detalle_pedido">
+		<type name="text"/>
+	</column>
+	<column name="id_pedido_minutas_fk">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_detalle_pedido_usuario_id" type="pk-constr" table="minutas.detalle_pedido_usuario">
+		<columns names="id_detalle_pedido_usuario" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="fk_usuario_rol_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.rol" table="seguridad.usuario">
+	<columns names="id_rol_fk_usuario" ref-type="src-columns"/>
+	<columns names="id_rol" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_cabezera_rol_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.rol" table="seguridad.cabezera">
+	<columns names="id_rol_fk_cabezera" ref-type="src-columns"/>
+	<columns names="id_rol" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_submenu_menu_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.menu" table="seguridad.submenu">
+	<columns names="id_menu_fk_submenu" ref-type="src-columns"/>
+	<columns names="id_menu" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_cabezera_submenu_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.cabezera" table="seguridad.submenu">
+	<columns names="id_cabezera_fk_submenu" ref-type="src-columns"/>
+	<columns names="id_cabezera" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_usuario_log_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.usuario" table="configuracion.log_lte">
+	<columns names="id_usuario_fk_log" ref-type="src-columns"/>
+	<columns names="id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_minutas_usuario_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.usuario" table="minutas.registro_minutas">
+	<columns names="id_usuario_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_registro_minutas_acciones_minutas_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="minutas.acciones_minutas" table="minutas.registro_minutas">
+	<columns names="id_acciones_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_acciones_minutas" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_registro_minutas_pedidos_minutas_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="minutas.pedidos_minutas" table="minutas.registro_minutas">
+	<columns names="id_pedido_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_pedido_minutas" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_reporte_dano_tipo_dano" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="mantenimiento.tipo_dano" table="mantenimiento.reporte_danos">
+	<columns names="id_tipo_dano_fk" ref-type="src-columns"/>
+	<columns names="id_tipo_dano" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_reporte_dano_elemento_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="mantenimiento.elemento" table="mantenimiento.reporte_danos">
+	<columns names="id_tipo_elemento_fk" ref-type="src-columns"/>
+	<columns names="id_elemento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="pk_usuario_reporte_danos_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.usuario" table="mantenimiento.reporte_danos">
+	<columns names="id_usuario_reporte_danos_fk" ref-type="src-columns"/>
+	<columns names="id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_elemento_tipo_elemento" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="mantenimiento.tipo_elemento" table="mantenimiento.elemento">
+	<columns names="id_tipo_elemento_fk" ref-type="src-columns"/>
+	<columns names="id_tipo_elemento" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_sub_categoria_categoria_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="minutas.categoria_minutas" table="minutas.sub_categoria_minutas">
+	<columns names="id_categoria_sub_menu_fk" ref-type="src-columns"/>
+	<columns names="id_categoria_minutas" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_sub_categoria_acciones_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="minutas.acciones_minutas" table="minutas.sub_categoria_minutas">
+	<columns names="id_accion_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_acciones_minutas" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_sub_categoria_usuario_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.usuario" table="minutas.sub_categoria_minutas">
+	<columns names="id_usuario_sub_categoria_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_acciones_minutas_usuarios_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="seguridad.usuario" table="minutas.acciones_minutas">
+	<columns names="id_usuario_acciones_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_usuario" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_detalle_pedido_minutas_pedidos_minutas_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="minutas.pedidos_minutas" table="minutas.detalle_pedido_usuario">
+	<columns names="id_pedido_minutas_fk" ref-type="src-columns"/>
+	<columns names="id_pedido_minutas" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_cabezera_rol" type="relfk"
+	 src-table="seguridad.cabezera"
+	 dst-table="seguridad.rol"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_usuario_rol" type="relfk"
+	 src-table="seguridad.usuario"
+	 dst-table="seguridad.rol"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_submenu_menu" type="relfk"
+	 src-table="seguridad.submenu"
+	 dst-table="seguridad.menu"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_log_lte_usuario" type="relfk"
+	 src-table="configuracion.log_lte"
+	 dst-table="seguridad.usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_submenu_cabezera" type="relfk"
+	 src-table="seguridad.submenu"
+	 dst-table="seguridad.cabezera"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_registro_minutas_usuario" type="relfk"
+	 src-table="minutas.registro_minutas"
+	 dst-table="seguridad.usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_reporte_danos_tipo_dano" type="relfk"
+	 src-table="mantenimiento.reporte_danos"
+	 dst-table="mantenimiento.tipo_dano"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_reporte_danos_elemento" type="relfk"
+	 src-table="mantenimiento.reporte_danos"
+	 dst-table="mantenimiento.elemento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_elemento_tipo_elemento" type="relfk"
+	 src-table="mantenimiento.elemento"
+	 dst-table="mantenimiento.tipo_elemento"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_reporte_danos_usuario" type="relfk"
+	 src-table="mantenimiento.reporte_danos"
+	 dst-table="seguridad.usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_sub_categoria_minutas_categoria_minutas" type="relfk"
+	 src-table="minutas.sub_categoria_minutas"
+	 dst-table="minutas.categoria_minutas"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_sub_categoria_minutas_acciones_minutas" type="relfk"
+	 src-table="minutas.sub_categoria_minutas"
+	 dst-table="minutas.acciones_minutas"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_sub_categoria_minutas_usuario" type="relfk"
+	 src-table="minutas.sub_categoria_minutas"
+	 dst-table="seguridad.usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_acciones_minutas_usuario" type="relfk"
+	 src-table="minutas.acciones_minutas"
+	 dst-table="seguridad.usuario"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_detalle_pedido_usuario_pedidos_minutas" type="relfk"
+	 src-table="minutas.detalle_pedido_usuario"
+	 dst-table="minutas.pedidos_minutas"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_registro_minutas_acciones_minutas" type="relfk"
+	 src-table="minutas.registro_minutas"
+	 dst-table="minutas.acciones_minutas"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_registro_minutas_pedidos_minutas" type="relfk"
+	 src-table="minutas.registro_minutas"
+	 dst-table="minutas.pedidos_minutas"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>

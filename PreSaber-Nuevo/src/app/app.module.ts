@@ -49,6 +49,7 @@ import { StockUsuarioComponent } from './components/calificacion/stock-usuario/s
 import {ValidarPaginaComponent} from "./components/validar-pagina/validar-pagina.component";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { IndicadorCalificacionPremarcadoVsComponent } from './components/comercial/indicador-calificacion-premarcado-vs/indicador-calificacion-premarcado-vs.component';
 
 
 @NgModule({
@@ -89,7 +90,8 @@ import { environment } from '../environments/environment';
     IndicadoresCalificacionComponent,
     AlmacenCalificacionComponent,
     ValidarPaginaComponent,
-    StockUsuarioComponent
+    StockUsuarioComponent,
+    IndicadorCalificacionPremarcadoVsComponent
   ],
   imports: [
     BrowserModule,

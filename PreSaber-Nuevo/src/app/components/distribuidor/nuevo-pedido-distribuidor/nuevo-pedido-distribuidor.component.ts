@@ -760,6 +760,7 @@ export class NuevoPedidoDistribuidorComponent implements OnInit {
   validarFecha() {
     console.log('entro');
     var fechaActual = new Date();
+    console.log(fechaActual);
     var fechaFormateada = moment(fechaActual).format('Y-MM-DD');
     var arregloFechaActual = fechaFormateada.split('-');
     var fechasSeleccionada = new Date(this.parserFormatter.format(this.fechaAplicacion));
@@ -773,10 +774,10 @@ export class NuevoPedidoDistribuidorComponent implements OnInit {
       if (arregloFechaActual[0] == arregloFechaEnvio[0]) {
         if (arregloFechaSeleccionada[1] >= arregloFechaEnvio[1]) {
           if (arregloFechaSeleccionada[2] > arregloFechaEnvio[2]) {
-            if (arregloFechaSeleccionada[0] >= arregloFechaActual[0]) {
-              if (arregloFechaActual[0] == arregloFechaSeleccionada[0]) {
-                if (arregloFechaSeleccionada[1] >= arregloFechaActual[1]) {
-                  if (arregloFechaSeleccionada[2] >= arregloFechaActual[2]) {
+            if (arregloFechaSeleccionada[0] >= arregloFechaEnvio[0]) {
+              if (arregloFechaEnvio[0] == arregloFechaSeleccionada[0]) {
+                if (arregloFechaSeleccionada[1] >= arregloFechaEnvio[1]) {
+                  if (arregloFechaSeleccionada[2] >= arregloFechaEnvio[2]) {
 
 
                   } else {

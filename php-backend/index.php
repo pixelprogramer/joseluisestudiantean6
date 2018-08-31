@@ -49,4 +49,5 @@ require 'App/componentes/siscalificacion/colegios.php';
 require 'App/componentes/distribuidor/nuevoPedido.php';
 require 'App/componentes/calificacion/indicadoresCalificacion.php';
 require 'App/componentes/calificacion/almacen.php';
+require 'App/componentes/comercial/premarcadovscalificado.php';
 $app->run();

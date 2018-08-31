@@ -38,6 +38,7 @@ import {AlmacenCalificacionComponent} from "./components/calificacion/almacen-ca
 import {Stock_usuario_almacen_calificacion} from "./models/almacen/stock_usuario_almacen_calificacion";
 import {StockUsuarioComponent} from "./components/calificacion/stock-usuario/stock-usuario.component";
 import {ValidarPaginaComponent} from "./components/validar-pagina/validar-pagina.component";
+import {IndicadorCalificacionPremarcadoVsComponent} from "./components/comercial/indicador-calificacion-premarcado-vs/indicador-calificacion-premarcado-vs.component";
 
 
 const appRoutes: Routes = [
@@ -73,6 +74,7 @@ const appRoutes: Routes = [
   {path: 'calificacion/indicadores', component: IndicadoresCalificacionComponent},
   {path: 'calificacion/almacenClificacion',component: AlmacenCalificacionComponent},
   {path: 'calificacion/almacen/stockUsuario',component: StockUsuarioComponent},
+  {path: 'comercial/indicadores/calificacionvspremarcado',component: IndicadorCalificacionPremarcadoVsComponent},
   //Rutas distribuidor
   {path: 'home/distribuidor', component: HomeDistrivuidorComponent},
   {path: 'distribuidor/RealizarNuevoPedido', component: NuevoPedidoDistribuidorComponent},

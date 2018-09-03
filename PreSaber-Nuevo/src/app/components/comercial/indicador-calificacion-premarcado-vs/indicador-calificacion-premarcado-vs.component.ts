@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CalificacionService} from "../../../services/calificacion/calificacion.service";
 import {NgbCalendar, NgbDateParserFormatter, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {GLOBAL} from "../../../services/global";
 import {ElementsService} from "../../../services/elements.service";
-
+import {ComercialService} from "../../../services/comercial/comercial.service";
 
 
 const equals = (one: NgbDateStruct, two: NgbDateStruct) =>
@@ -21,7 +21,7 @@ const after = (one: NgbDateStruct, two: NgbDateStruct) =>
   selector: 'app-indicador-calificacion-premarcado-vs',
   templateUrl: './indicador-calificacion-premarcado-vs.component.html',
   styleUrls: ['./indicador-calificacion-premarcado-vs.component.scss'],
-  providers: [ElementsService]
+  providers: [ElementsService, ComercialService]
 })
 export class IndicadorCalificacionPremarcadoVsComponent implements OnInit {
 
@@ -37,13 +37,19 @@ export class IndicadorCalificacionPremarcadoVsComponent implements OnInit {
 
   toggle = false;
   urlFile: any;
-  constructor(private _ElementService: ElementsService,public parserFormatter: NgbDateParserFormatter,
-              public calendar: NgbCalendar, ) {
+  public token: any;
+
+  constructor(private _ElementService: ElementsService,
+              public parserFormatter: NgbDateParserFormatter,
+              public calendar: NgbCalendar,
+              private _ComercialService: ComercialService) {
     this.urlFile = GLOBAL.urlFiles;
+    this.token = localStorage.getItem('token');
   }
 
   ngOnInit() {
     this._ElementService.pi_poValidarUsuario('IndicadorCalificacionPremarcadoVsComponent');
+    $("#loaderGenerarReporte").hide();
   }
 
   isHovered = date => this.fromDate && !this.toDate && this.hoveredDate && after(date, this.fromDate) && before(date, this.hoveredDate);
@@ -63,13 +69,31 @@ export class IndicadorCalificacionPremarcadoVsComponent implements OnInit {
       this.fromDate = date;
     }
   }
-  generarReporte(){
+
+  generarReporte() {
+    $("#loaderGenerarReporte").show();
     this._ElementService.pi_poBontonDesabilitar('#btnGenerarReporte');
     if (this.toDate || this.fromDate) {
-
+      this._ComercialService.generarReporteCalificadoVsPremarcado(this.token, this.parserFormatter.format(this.fromDate), this.parserFormatter.format(this.toDate)).subscribe(
+        respuesta => {
+          this._ElementService.pi_poValidarCodigo(respuesta);
+          if (respuesta.status == 'success') {
+            window.open(this.urlFile + respuesta.data);
+            this._ElementService.pi_poBotonHabilitar('#btnGenerarReporte');
+            $("#loaderGenerarReporte").hide();
+          } else {
+            this._ElementService.pi_poVentanaAlertaWarning(respuesta.code, respuesta.msg)
+            this._ElementService.pi_poBotonHabilitar('#btnGenerarReporte');
+            $("#loaderGenerarReporte").hide();
+          }
+        }, error2 => {
+          $("#loaderGenerarReporte").hide();
+        }
+      )
     } else {
       this._ElementService.pi_poVentanaAlertaWarning('LTE-000', 'Lo sentimos, Se necesita seleccionar una fecha inicial y una final para poder generar el reporte');
       this._ElementService.pi_poBotonHabilitar('#btnGenerarReporte');
+      $("#loaderGenerarReporte").hide();
     }
 
   }

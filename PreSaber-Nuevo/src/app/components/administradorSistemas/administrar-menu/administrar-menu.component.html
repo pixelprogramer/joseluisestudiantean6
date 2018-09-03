@@ -21,7 +21,7 @@
              sub-item-theme="theme2" active-item-style="style0" pcoded-navbar-position="fixed"
              pcoded-header-position="fixed">
           <div class="sidebar_toggle"><a href="javascript:;"><i class="icon-close icons"></i></a></div>
-          <div class="pcoded-inner-navbar main-menu" appAccordion>
+          <div class="pcoded-inner-navbar main-menu" appAccordion style="height: 70%!important;">
             <perfect-scrollbar [style.max-width]="'100%'" [style.max-height]="'calc(100vh - 56px)'" >
               <div *ngFor="let cabezera of listMenuTodo">
 
@@ -103,11 +103,11 @@
                       <div class="col-md-12">
                         <h4 class="sub-title">Items menu<h6 style="color: red">{{nombreCabezera}}</h6></h4>
                         <nav id="main_navbar" class=" pcoded-navbar" navbar-theme="themelight1"
-                             active-item-theme="theme4" style="width: 240px !important; height: 500px; background: gray"
+                             active-item-theme="theme4" style="width: 240px !important; height: 50%; background: gray"
                              sub-item-theme="theme2" active-item-style="style0" pcoded-navbar-position="fixed"
                              pcoded-header-position="fixed">
                           <div class="sidebar_toggle"><a href="javascript:;"><i class="icon-close icons"></i></a></div>
-                          <div class="pcoded-inner-navbar main-menu" appAccordion>
+                          <div class="pcoded-inner-navbar main-menu" appAccordion style="height: 50% !important;">
                             <perfect-scrollbar [style.max-width]="'100%'" [style.max-height]="'calc(100vh - 56px)'"
                                              >
                               <ul *ngFor="let sub of listMenu" class="pcoded-item pcoded-left-item" item-border="none"

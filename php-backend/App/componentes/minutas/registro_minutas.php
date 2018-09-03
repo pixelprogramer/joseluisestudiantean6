@@ -333,11 +333,13 @@ $app->post('/minutas/unix/terminarMinuta', function () use ($app) {
                 $usuarioToken = $helper->authCheck($token, true);
                 $id_registro_minutas = (isset($parametros->id_registro_minutas)) ? $parametros->id_registro_minutas : null;
                 $idPedido = (isset($parametros->id_pedido_minutas_fk)) ? $parametros->id_pedido_minutas_fk : null;
+                /*
                 $validacionStockUsuario = '';
                 if ($idPedido != '' && $idPedido != null) {
                     $validacionStockUsuario = calcularStockUsuario($idPedido);
                 }
                 if ($validacionStockUsuario == '') {
+                */
                     $sql = "select *  from minutas.registro_minutas rm where rm.id_registro_minutas = '$id_registro_minutas';";
                     $r = $conexion->consultaComplejaNorAso($sql);
                     if ($r != 0) {
@@ -365,6 +367,7 @@ $app->post('/minutas/unix/terminarMinuta', function () use ($app) {
                     } else {
 
                     }
+                    /*
                 } else {
                     $data = [
                         'code' => 'LTE-000',
@@ -372,6 +375,7 @@ $app->post('/minutas/unix/terminarMinuta', function () use ($app) {
                         'msg' => $validacionStockUsuario
                     ];
                 }
+                    */
             } else {
                 $data = [
                     'code' => 'LTE-013'

@@ -60,41 +60,74 @@ $app->post('/consultaxls', function () use ($app) {
     echo $helper->checkCode($data);
 });
 
-$app->post('/calificacionvspremarcado', function () use ($app) {
+$app->post('/calificacion/calificacionvspremarcado', function () use ($app) {
     $helper = new helper();
     $conexion = new conexMsql();
-
-    $sql = "select orde.id,orde.id_seller,orde.id_order_type,sch.dane,pro.description as descripcion_producto,ordt.id_product,orde.id_seller,
-sch.description as descripcion_colegio,ordt.quantity_calificado, ordt.quantity_premarcado from orders orde 
+    $token = $app->request->post('token', null);
+    if ($token != null) {
+        $validacionToken = $helper->authCheck($token);
+        if ($validacionToken == true) {
+            $fechInicial = $app->request->post('fechaInicial', null);
+            $fechaFinal = $app->request->post('fechaFinal', null);
+            $feIni = explode('-',$fechInicial);
+            $feFini = explode('-',$fechaFinal);
+            $fechInicial = $feIni[0].'-'.$feIni[1];
+            $fechaFinal=$feFini[0].'-'.$feFini[1];
+            $sql = "select orde.id,orde.id_seller,orde.id_order_type,sch.dane,pro.description as descripcion_producto,ordt.id_product,orde.id_seller,
+sch.description as descripcion_colegio,ordt.quantity_calificado, ordt.quantity_premarcado, 
+orde.created_at as fecha_pedido, us.name, us.surname, ci.description as ciudad from orders orde 
 inner join schools sch on orde.id_school=sch.id 
 inner join order_details ordt on orde.id=ordt.id_order
 inner join products pro on ordt.id_product=pro.id
+inner join users us on orde.id_seller=us.id
+inner join cities ci on ci.id = sch.id_city
 where orde.id_order_type in (4,3)  and orde.state = 'DESPACHO' 
-and DATE_FORMAT(orde.created_at,'%Y-%m') between '2018-01' and '2018-08'  order by sch.dane, pro.id asc";
-    $r = $conexion->consultaComplejaAso($sql);
-    $arregloCompleto = array();
-    if ($r != 0) {
-        for ($i = 0; $i < count($r); $i++) {
-            $validacionEntradaColegio=0;
-            for ($n = 0; $n < count($arregloCompleto); $n++) {
-                if ($arregloCompleto[$n]['dane'] == $r[$i]['dane']) {
-                    $validacionEntrada = 0;
-                    $validacionEntradaColegio = 1;
-                    for ($y = 0; $y < count($arregloCompleto[$n]['cantidad']); $y++) {
-                        if ($r[$i]['id_product'] == $arregloCompleto[$n]['cantidad'][$y]['id']) {
-                            $calificado = 0;
-                            $premarcado = 0;
-                            if ($r[$i]['id_order_type'] == '4') {
-                                $calificado = $r[$i]['quantity_calificado'];
-                            } else if ($r[$i]['id_order_type'] == '3') {
-                                $premarcado = $r[$i]['quantity_premarcado'];
+and DATE_FORMAT(orde.created_at,'%Y-%m') between '$fechInicial' and '$fechaFinal'  order by sch.dane, pro.id asc";
+            $r = $conexion->consultaComplejaAso($sql);
+            $arregloCompleto = array();
+            if ($r != 0) {
+                for ($i = 0; $i < count($r); $i++) {
+                    $validacionEntradaColegio = 0;
+                    for ($n = 0; $n < count($arregloCompleto); $n++) {
+                        if ($arregloCompleto[$n]['dane'] == $r[$i]['dane']) {
+                            $validacionEntrada = 0;
+                            $validacionEntradaColegio = 1;
+                            for ($y = 0; $y < count($arregloCompleto[$n]['cantidad']); $y++) {
+                                if ($r[$i]['id_product'] == $arregloCompleto[$n]['cantidad'][$y]['id']) {
+                                    $calificado = 0;
+                                    $premarcado = 0;
+                                    if ($r[$i]['id_order_type'] == '4') {
+                                        $calificado = $r[$i]['quantity_calificado'];
+                                    } else if ($r[$i]['id_order_type'] == '3') {
+                                        $premarcado = $r[$i]['quantity_premarcado'];
+                                    }
+                                    $arregloCompleto[$n]['cantidad'][$y]['calificado'] += $calificado;
+                                    $arregloCompleto[$n]['cantidad'][$y]['premarcado'] += $premarcado;
+                                    $validacionEntrada = 1;
+                                }
                             }
-                            $arregloCompleto[$n]['cantidad'][$y]['calificado'] += $calificado;
-                            $arregloCompleto[$n]['cantidad'][$y]['premarcado'] += $premarcado;
-                            $validacionEntrada = 1;
+                            if ($validacionEntrada == 0) {
+                                $calificado = 0;
+                                $premarcado = 0;
+                                if ($r[$i]['id_order_type'] == '4') {
+                                    $calificado = $r[$i]['quantity_calificado'];
+                                } else if ($r[$i]['id_order_type'] == '3') {
+                                    $premarcado = $r[$i]['quantity_premarcado'];
+                                }
+
+                                array_push($arregloCompleto[$n]['cantidad'], [
+                                    'id' => $r[$i]['id_product'],
+                                    'producto' => $r[$i]['descripcion_producto'],
+                                    'distribuidor' => $r[$i]['name'] . ' ' . $r[$i]['surname'],
+                                    'fechaCreacion' => $r[$i]['fecha_pedido'],
+                                    'ciudad' => $r[$i]['ciudad'],
+                                    'calificado' => $calificado,
+                                    'premarcado' => $premarcado
+                                ]);
+                            }
                         }
                     }
-                    if ($validacionEntrada == 0) {
+                    if ($validacionEntradaColegio == 0) {
                         $calificado = 0;
                         $premarcado = 0;
                         if ($r[$i]['id_order_type'] == '4') {
@@ -102,57 +135,54 @@ and DATE_FORMAT(orde.created_at,'%Y-%m') between '2018-01' and '2018-08'  order 
                         } else if ($r[$i]['id_order_type'] == '3') {
                             $premarcado = $r[$i]['quantity_premarcado'];
                         }
-
-                        array_push($arregloCompleto[$n]['cantidad'], [
-                            'id' => $r[$i]['id_product'],
-                            'producto' => $r[$i]['descripcion_producto'],
-                            'calificado' => $calificado,
-                            'premarcado' => $premarcado
+                        array_push($arregloCompleto, [
+                            'dane' => $r[$i]['dane'],
+                            'colegio' => $r[$i]['descripcion_colegio'],
+                            'cantidad' => [[
+                                'id' => $r[$i]['id_product'],
+                                'producto' => $r[$i]['descripcion_producto'],
+                                'distribuidor' => $r[$i]['name'] . ' ' . $r[$i]['surname'],
+                                'fechaCreacion' => $r[$i]['fecha_pedido'],
+                                'ciudad' => $r[$i]['ciudad'],
+                                'calificado' => $calificado,
+                                'premarcado' => $premarcado
+                            ]
+                            ]
                         ]);
                     }
                 }
+                $ruta = generarReporteExcelCalificacionvspremarcado($arregloCompleto);
+                $data = [
+                    'code' => 'LTE-001',
+                    'data' => $ruta
+                ];
+
+            } else {
+                $data = [
+                    'code' => 'LTE-000',
+                    'msg' => 'Lo sentimos, no se encontraron resultados',
+                    'status' => 'error'
+                ];
             }
-            if ($validacionEntradaColegio == 0){
-                $calificado = 0;
-                $premarcado = 0;
-                if ($r[$i]['id_order_type'] == '4') {
-                    $calificado = $r[$i]['quantity_calificado'];
-                } else if ($r[$i]['id_order_type'] == '3') {
-                    $premarcado = $r[$i]['quantity_premarcado'];
-                }
-                array_push($arregloCompleto, [
-                    'dane' => $r[$i]['dane'],
-                    'colegio' => $r[$i]['descripcion_colegio'],
-                    'cantidad' => [[
-                        'id' => $r[$i]['id_product'],
-                        'producto' => $r[$i]['descripcion_producto'],
-                        'calificado' => $calificado,
-                        'premarcado' => $premarcado
-                    ]
-                    ]
-                ]);
-            }
+        } else {
+            $data = [
+                'LTE-013'
+            ];
         }
-        $data = [
-            'code'=>'LTE-001',
-            'data'=>$arregloCompleto
-        ];
-        generarReporteExcelCalificacionvspremarcado($arregloCompleto);
     } else {
         $data = [
-            'code' => 'LTE-000',
-            'msg' => 'Lo sentimos, no se encontraron resultados',
-            'status' => 'error'
+            'code' => 'LTE-013'
         ];
     }
+
     echo $helper->checkCode($data);
 });
 function generarReporteExcelCalificacionvspremarcado($arregloCompleto)
 {//Funcion para generar el reporte en excel el cual retornara la ruta del mismo
     $libro = new PhpOffice\PhpSpreadsheet\Spreadsheet();
     //Reporte de indicadores I1
-    $libro->getActiveSheet()->mergeCells('A1:E1');
-    $libro->getActiveSheet()->getStyle('A1:E2')->getFont()->setBold(true);
+    $libro->getActiveSheet()->mergeCells('A1:H1');
+    $libro->getActiveSheet()->getStyle('A1:H2')->getFont()->setBold(true);
     $hoja = $libro->getActiveSheet();
     $libro->getSheet(0)->getColumnDimension('A')->setAutoSize(true);
     $libro->getSheet(0)->getColumnDimension('B')->setAutoSize(true);
@@ -161,13 +191,13 @@ function generarReporteExcelCalificacionvspremarcado($arregloCompleto)
     $libro->getSheet(0)->getColumnDimension('E')->setAutoSize(true);
     $libro->getSheet(0)->getColumnDimension('G')->setAutoSize(true);
     $libro->getSheet(0)->getColumnDimension('H')->setAutoSize(true);
-    $libro->getSheet(0)->getColumnDimension('I')->setAutoSize(true);
+
 
     $hoja->setTitle('I1');
-    $libro->getActiveSheet()->getStyle('A1:E2')->getFill()
+    $libro->getActiveSheet()->getStyle('A1:H2')->getFill()
         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
         ->getStartColor()->setARGB('0070C0');
-    $libro->getSheet(0)->getStyle('A1:E2')
+    $libro->getSheet(0)->getStyle('A1:H2')
         ->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
     $hoja->setCellValue('A1', 'Calificacion vs premarcado');
     $hoja->setCellValue('A2', 'Dane');
@@ -175,17 +205,23 @@ function generarReporteExcelCalificacionvspremarcado($arregloCompleto)
     $hoja->setCellValue('C2', 'Producto');
     $hoja->setCellValue('D2', 'Premarcado');
     $hoja->setCellValue('E2', 'Calificado');
+    $hoja->setCellValue('F2', 'Distribuidor');
+    $hoja->setCellValue('G2', 'Ciudad');
+    $hoja->setCellValue('H2', 'Fecha de creacion');
     $iterador = 3;
 
     for ($i = 0; $i < count($arregloCompleto); $i++) {
         $hoja->setCellValue('A' . $iterador, $arregloCompleto[$i]['dane']);
         $hoja->setCellValue('B' . $iterador, $arregloCompleto[$i]['colegio']);
-        for ($n = 0; $n<count($arregloCompleto[$i]['cantidad']); $n++){
+        for ($n = 0; $n < count($arregloCompleto[$i]['cantidad']); $n++) {
             $hoja->setCellValue('A' . $iterador, $arregloCompleto[$i]['dane']);
             $hoja->setCellValue('B' . $iterador, $arregloCompleto[$i]['colegio']);
             $hoja->setCellValue('C' . $iterador, $arregloCompleto[$i]['cantidad'][$n]['producto']);
             $hoja->setCellValue('D' . $iterador, $arregloCompleto[$i]['cantidad'][$n]['premarcado']);
             $hoja->setCellValue('E' . $iterador, $arregloCompleto[$i]['cantidad'][$n]['calificado']);
+            $hoja->setCellValue('F' . $iterador, $arregloCompleto[$i]['cantidad'][$n]['distribuidor']);
+            $hoja->setCellValue('G' . $iterador, $arregloCompleto[$i]['cantidad'][$n]['ciudad']);
+            $hoja->setCellValue('H' . $iterador, $arregloCompleto[$i]['cantidad'][$n]['fechaCreacion']);
             $iterador++;
         }
 
@@ -204,11 +240,11 @@ function generarReporteExcelCalificacionvspremarcado($arregloCompleto)
         ],
     ];
 
-    $libro->getSheet(0)->getStyle('A1:E' . $iterador)->applyFromArray($styleArray);
+    $libro->getSheet(0)->getStyle('A1:H' . $iterador)->applyFromArray($styleArray);
 
     $excel = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($libro);
 
     $excel->save('./App/public/excel/calificacionvspremarcado.xlsx');
 
-    //return '/excel/Reporte_indicadores_premarcado_calificacion.xlsx';
+    return '/excel/calificacionvspremarcado.xlsx';
 }

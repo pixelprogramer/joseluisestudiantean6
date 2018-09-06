@@ -276,7 +276,7 @@ class Graficos extends TCPDF
                     $y = $this->GetY();
                     $this->SetXY($barX, $chartY);
                     //$this->Rotate(360);
-                    $this->Cell($barWidth, 5, $datosBarras[$i]['value'], 0, 0, 'C');
+                    $this->Cell($barWidth, 5, number_format($datosBarras[$i]['value'],2), 0, 0, 'C');
                     $this->Rotate(0);
                     $this->StopTransform();
                     $this->SetXY($x, $y);
@@ -287,7 +287,7 @@ class Graficos extends TCPDF
                     $y = $this->GetY();
                     $this->SetXY($barX, $barY - 5);
                     //$this->Rotate(360);
-                    $this->Cell($barWidth, 5, $datosBarras[$i]['value'], 0, 0, 'C');
+                    $this->Cell($barWidth, 5, number_format($datosBarras[$i]['value'],2), 0, 0, 'C');
                     $this->Rotate(0);
                     $this->StopTransform();
                     $this->SetXY($x, $y);
@@ -335,7 +335,7 @@ class Graficos extends TCPDF
                     $y = $this->GetY();
                     $this->SetXY($barX, $chartY);
                     //$this->Rotate(360);
-                    $this->Cell($barWidth, 5, $datosBarras[$i]['value'], 0, 0, 'C');
+                    $this->Cell($barWidth, 5, number_format($datosBarras[$i]['value'],2), 0, 0, 'C');
                     $this->Rotate(0);
                     $this->StopTransform();
                     $this->SetXY($x, $y);
@@ -346,7 +346,7 @@ class Graficos extends TCPDF
                     $y = $this->GetY();
                     $this->SetXY($barX, $barY - 5);
                     //$this->Rotate(360);
-                    $this->Cell($barWidth, 5, $datosBarras[$i]['value'], 0, 0, 'C');
+                    $this->Cell($barWidth, 5, number_format($datosBarras[$i]['value'],2), 0, 0, 'C');
                     $this->Rotate(0);
                     $this->StopTransform();
                     $this->SetXY($x, $y);
@@ -392,9 +392,9 @@ class Graficos extends TCPDF
                     $this->Line($chartBoxX + $chartBoxWidth, $barY, $chartBoxX, $barY);
                     $this->SetX($chartBoxX + $chartBoxWidth + 1 + $indentar);
                     if ($indentar != 0) {
-                        $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                        $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . number_format($datosLineasHorizontales[$i]['value'],2), 0, 0, 'L');
                     } else {
-                        $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                        $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . number_format($datosLineasHorizontales[$i]['value'],2), 0, 0, 'L');
                     }
 
                     $this->SetXY($x, $y);
@@ -433,9 +433,9 @@ class Graficos extends TCPDF
                     $this->Line($chartBoxX + $chartBoxWidth, $barY, $chartBoxX, $barY);
                     $this->SetX($chartBoxX + $chartBoxWidth + 1 + $indentar);
                     if ($indentar != 0) {
-                        $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                        $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . number_format($datosLineasHorizontales[$i]['value'],2), 0, 0, 'L');
                     } else {
-                        $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                        $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . number_format($datosLineasHorizontales[$i]['value'],2), 0, 0, 'L');
                     }
 
                     $this->SetXY($x, $y);
@@ -499,7 +499,7 @@ class Graficos extends TCPDF
             $this->SetXY($this->GetX(),$this->GetY()+4);
             $this->Cell($tamañoTexto,5,$datos[$i]['label'],1,0,'C');
             $this->SetXY($this->GetX()-$tamañoTexto,$this->GetY()+5.01000);
-            $this->Cell($tamañoTexto,5,$datos[$i]['value'],1,0,'C');
+            $this->Cell($tamañoTexto,5,number_format($datos[$i]['value'],2),1,0,'C');
             $this->SetXY($this->GetX()+2,$y+13);
         }
     }

@@ -8,14 +8,15 @@ $app->post('/pruebaCharts', function () use ($app) {
     {
         function nuevo()
         {
-            $this->AddPage('L', 'mm', 'Letter', true, 'UTF-8', false, false);
             $this->setPrintHeader(false);
             $this->setPrintFooter(false);
-            $this->SetXY(30, 20);
+            $this->AddPage('L', 'Letter','mm', 'Letter', true, 'UTF-8', false, false);
+
+            $this->SetXY(10, 40);
             //Datos barras
             $datos = array([
                 'label' => 'Matematicas',
-                'value' => 3.2
+                'value' => 3
             ], [
                 'label' => 'Lectura critica',
                 'value' => 4.93
@@ -51,34 +52,37 @@ $app->post('/pruebaCharts', function () use ($app) {
                 ]
             ]);
 
-            $this->generarGraficaDeBarras(2, $datos, $datosLineasHorizontales, 220, 90, 15, 1, true, 'Calificacion',
+            $this->generarGraficaDeBarras(0, $datos, $datosLineasHorizontales, 220, 80, 15, 1, true, 'Calificacion',
                 true, 'Asignatura', 'v',
-                false, true, true, true, false, 5, 3);
-            /*
-                        $datos = array([
-                            'label'=>'Bajo',
-                            'value'=>'0.01'
-                        ],[
-                            'label'=>'Basico',
-                            'value'=>'3.57'
-                        ],[
-                            'label'=>'Alto',
-                            'value'=>'25.00'
-                        ],[
-                            'label'=>'Superior',
-                            'value'=>'71.43'
-                        ]);
-                        $this->SetXY(200,$this->GetY()+10);
-                        $this->generarGraficaDeBarras(1,$datos, null, 90, 60,
-                            15,10, true, 'Poxentaje Estudiante por desempeño',
-                            true, 'Desempeños', 'v',
-                            false, true, true, false,100);
-            */
+                false, false, true, true, true, true);
+
+            $datos = array([
+                'label' => 'Bajo',
+                'value' => '0.00'
+            ], [
+                'label' => 'Basico',
+                'value' => '3.57'
+            ], [
+                'label' => 'Alto',
+                'value' => '25.00'
+            ], [
+                'label' => 'Superior',
+                'value' => '71.43'
+            ]);
+
+            $this->SetXY(200, $this->GetY()+5);
+            $this->generarGraficaDeBarras(1, $datos, null, 90, 48, 15, 10, true, 'Porcentaje',
+                true, 'Desempeño', 'v',
+                false, true, false,
+                true, true, true, false, 100);
+
         }
     }
 
     $pdf = new reporteCompleto();
+
     $pdf->nuevo();
+
     //die();
     if (!file_exists($route))
         mkdir($route, 0, true);
@@ -90,8 +94,27 @@ $app->post('/pruebaCharts', function () use ($app) {
 class Graficos extends TCPDF
 {
 
-    function generarGraficaDeBarras($tipoColorBarras = null, $datosBarras, $datosLineasHorizontales = null, $ancho = 0, $alto, $anchoBarra = 0, $iteradorEjeY = 10, $mostrarTextoEjeY = false, $tituloEjeY, $mostrarTextoEjeX = false, $tituloEjeX, $horientacionTextoEjeY = 'h',
-                                    $pintarBordeExternoGrafica = false, $pintarValoresSuperiorxBarra = false, $lineasHorizontales = false, $lineasHorizontalesDatos = false, $definirMinimoMaximo = false, $newDateMax = 0, $newDateMin = 0)
+    function generarGraficaDeBarras($tipoColorBarras = null,
+                                    $datosBarras,
+                                    $datosLineasHorizontales = null,
+                                    $ancho = 0,
+                                    $alto,
+                                    $anchoBarra = 0,
+                                    $iteradorEjeY = 10,
+                                    $mostrarTextoEjeY = false,
+                                    $tituloEjeY,
+                                    $mostrarTextoEjeX = false,
+                                    $tituloEjeX,
+                                    $horientacionTextoEjeY = 'h',
+                                    $pintarBordeExternoGrafica = false,
+                                    $pintarValoresSuperiorxBarra = false,
+                                    $pintarLeyendaGrafica = false,
+                                    $pintarValoresSuperiorGrafica = false,
+                                    $lineasHorizontales = false,
+                                    $lineasHorizontalesDatos = false,
+                                    $definirMinimoMaximo = false,
+                                    $newDateMax = 0,
+                                    $newDateMin = 0)
     {
 
         //Posicion
@@ -155,7 +178,6 @@ class Graficos extends TCPDF
         $this->Line($chartBoxX - 2, $chartBoxY + $chartBoxHeicht, $chartBoxX + $chartBoxWidth, $chartBoxY + $chartBoxHeicht);
 
         //Calcular las unidades de la linea del eje y
-
         if ($definirMinimoMaximo == false) {
             $yAxisUnits = $chartBoxHeicht / $datosMaximo;
             for ($i = 0; $i <= $datosMaximo; $i += $dataStep) {
@@ -182,11 +204,15 @@ class Graficos extends TCPDF
 
 
         if ($definirMinimoMaximo == true) {
-            $yAxisUnitsMin = $chartBoxHeicht / $datosMinimo;
-            $yAxisUnits = $chartBoxHeicht / $datosMaximo;
-            for ($i = 0; $i <= $datosMaximo - $datosMinimo; $i += $dataStep) {
+
+            $minDate = $this->cacularDatoMinimo($datosBarras);
+            if ($minDate < $newDateMin) {
+                die('Mensaje de pixelProgramer: El dato minimo ingresado: ' . $newDateMin . ' es menor al dato minimo de la barras: ' . $minDate);
+            }
+            $yAxisUnits = $chartBoxHeicht / ($newDateMax - $newDateMin);
+            for ($i = 0; $i <= $newDateMax - $newDateMin; $i += $dataStep) {
                 //y position
-                $yAxisPos = $chartBoxY + ($yAxisUnitsMin * $i);
+                $yAxisPos = $chartBoxY + ($yAxisUnits * $i);
                 //pintar  linea del eje y
                 if ($lineasHorizontales == true) {
                     if ($i != $datosMaximo) {
@@ -232,16 +258,29 @@ class Graficos extends TCPDF
                 //posicion en y de la barra
                 $barY = $chartBoxHeicht - $barHeght;
                 $barY = $barY + $chartBoxY;
-                //Pintar la barra
-                $arregloColores = $this->colorColumnas($tipoColorBarras);
-                if ($i < count($arregloColores)) {
-                    $random = $arregloColores[$i];
-                } else {
-                    $random = end($arregloColores);
-                }
+                if ($barHeght != 0) {
+                    //Pintar la barra
+                    $arregloColores = $this->colorColumnas($tipoColorBarras);
+                    if ($i < count($arregloColores)) {
+                        $random = $arregloColores[$i];
+                    } else {
+                        $random = end($arregloColores);
+                    }
 
-                $this->Image(__DIR__ . '../../public/imagenes_estandar/barras_graficas/' . $random . '.jpg', $barX, $barY - 0.2, $barWidth, $barHeght,
-                    'jpg', '');
+                    $this->Image(__DIR__ . '../../public/imagenes_estandar/barras_graficas/' . $random . '.jpg', $barX, $barY - 0.2, $barWidth, $barHeght,
+                        'jpg', '');
+                }
+                if ($pintarValoresSuperiorGrafica == true) {
+                    $this->StartTransform();
+                    $x = $this->GetX();
+                    $y = $this->GetY();
+                    $this->SetXY($barX, $chartY);
+                    //$this->Rotate(360);
+                    $this->Cell($barWidth, 5, $datosBarras[$i]['value'], 0, 0, 'C');
+                    $this->Rotate(0);
+                    $this->StopTransform();
+                    $this->SetXY($x, $y);
+                }
                 if ($pintarValoresSuperiorxBarra == true) {
                     $this->StartTransform();
                     $x = $this->GetX();
@@ -256,8 +295,7 @@ class Graficos extends TCPDF
 
                 $barXPos++;
             }
-        }else
-        {
+        } else if ($definirMinimoMaximo == true) {
             //Eje horizontal
             $this->SetXY($chartBoxX, $chartBoxY + $chartBoxHeicht);
             //Ancho de la celdas que contendran los labels
@@ -270,7 +308,8 @@ class Graficos extends TCPDF
                 //Pintamos las barras
                 $this->SetFillColor(255, 255, 255);
                 //Ancho de la barra
-                $barHeght = $yAxisUnits * $datosBarras[$i]['value'];
+                $constante = $newDateMin * $yAxisUnits;
+                $barHeght = $datosBarras[$i]['value'] * $yAxisUnits - $constante;
                 //posicion en x de la barra
                 $barX = ($xLabelWidth / 2) + ($xLabelWidth * $barXPos);
                 $barX = $barX - ($barWidth / 2);
@@ -278,16 +317,29 @@ class Graficos extends TCPDF
                 //posicion en y de la barra
                 $barY = $chartBoxHeicht - $barHeght;
                 $barY = $barY + $chartBoxY;
-                //Pintar la barra
-                $arregloColores = $this->colorColumnas($tipoColorBarras);
-                if ($i < count($arregloColores)) {
-                    $random = $arregloColores[$i];
-                } else {
-                    $random = end($arregloColores);
-                }
+                if ($barHeght != 0) {
+                    //Pintar la barra
+                    $arregloColores = $this->colorColumnas($tipoColorBarras);
+                    if ($i < count($arregloColores)) {
+                        $random = $arregloColores[$i];
+                    } else {
+                        $random = end($arregloColores);
+                    }
 
-                $this->Image(__DIR__ . '../../public/imagenes_estandar/barras_graficas/' . $random . '.jpg', $barX, $barY - 0.2, $barWidth, $barHeght,
-                    'jpg', '');
+                    $this->Image(__DIR__ . '../../public/imagenes_estandar/barras_graficas/' . $random . '.jpg', $barX, $barY - 0.2, $barWidth, $barHeght,
+                        'jpg', '');
+                }
+                if ($pintarValoresSuperiorGrafica == true) {
+                    $this->StartTransform();
+                    $x = $this->GetX();
+                    $y = $this->GetY();
+                    $this->SetXY($barX, $chartY);
+                    //$this->Rotate(360);
+                    $this->Cell($barWidth, 5, $datosBarras[$i]['value'], 0, 0, 'C');
+                    $this->Rotate(0);
+                    $this->StopTransform();
+                    $this->SetXY($x, $y);
+                }
                 if ($pintarValoresSuperiorxBarra == true) {
                     $this->StartTransform();
                     $x = $this->GetX();
@@ -306,47 +358,91 @@ class Graficos extends TCPDF
 
         //Pintar lineas horizontales datos
         if ($lineasHorizontalesDatos == true && $datosLineasHorizontales != null) {
-            $maxDate = $this->cacularDatoMaximo($datosLineasHorizontales);
-            if ($maxDate > $datosMaximo) {
-                die('Mensaje de pixelProgramer: Lo sentimos el dato con valor: ' . $maxDate . ' en las lineas horizontales(datos) es mayor al valor maximo de las barras.');
-            }
-            $barXPos = 0;
-            for ($i = 0; $i < count($datosLineasHorizontales); $i++) {
-                //Ancho de la barra
-
-                $barHeght = $yAxisUnits * $datosLineasHorizontales[$i]['value'];
-
-                //posicion en x de la barra
-                $barX = ($xLabelWidth / 2) + ($xLabelWidth * $barXPos);
-                $barX = $barX - ($barWidth / 2);
-                $barX = $barX + $chartBoxX;
-                //posicion en y de la barra
-                $barY = $chartBoxHeicht - $barHeght;
-                $barY = $barY + $chartBoxY;
-                //Pintar la linea horizontal
-                $x = $this->GetX();
-                $y = $this->GetY();
-                $contador = 1;
-                $indentar = 0;
-                for ($n = 0; $n < $i; $n++) {
-                    if ($datosLineasHorizontales[$i]['value'] == $datosLineasHorizontales[$n]['value']) {
-                        $contador -= 2.5;
-                        $indentar = 2;
-                    }
-                };
-                $this->SetXY($barX, $barY + ($contador * -1.5));
-                $this->SetDrawColor($datosLineasHorizontales[$i]['color']['r'], $datosLineasHorizontales[$i]['color']['g'], $datosLineasHorizontales[$i]['color']['b']);
-                $this->Line($chartBoxX + $chartBoxWidth, $barY, $chartBoxX, $barY);
-                $this->SetX($chartBoxX + $chartBoxWidth + 1 + $indentar);
-                if ($indentar != 0) {
-                    $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
-                } else {
-                    $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+            if ($definirMinimoMaximo == false) {
+                $maxDate = $this->cacularDatoMaximo($datosLineasHorizontales);
+                if ($maxDate > $datosMaximo) {
+                    die('Mensaje de pixelProgramer: Lo sentimos el dato con valor: ' . $maxDate . ' en las lineas horizontales(datos) es mayor al valor maximo de las barras.');
                 }
+                $barXPos = 0;
+                for ($i = 0; $i < count($datosLineasHorizontales); $i++) {
+                    //Ancho de la barra
 
-                $this->SetXY($x, $y);
-                $barXPos++;
+                    $barHeght = $yAxisUnits * $datosLineasHorizontales[$i]['value'];
+
+                    //posicion en x de la barra
+                    $barX = ($xLabelWidth / 2) + ($xLabelWidth * $barXPos);
+                    $barX = $barX - ($barWidth / 2);
+                    $barX = $barX + $chartBoxX;
+                    //posicion en y de la barra
+                    $barY = $chartBoxHeicht - $barHeght;
+                    $barY = $barY + $chartBoxY;
+                    //Pintar la linea horizontal
+                    $x = $this->GetX();
+                    $y = $this->GetY();
+                    $contador = 1;
+                    $indentar = 0;
+                    for ($n = 0; $n < $i; $n++) {
+                        if ($datosLineasHorizontales[$i]['value'] == $datosLineasHorizontales[$n]['value']) {
+                            $contador -= 2.5;
+                            $indentar = 2;
+                        }
+                    };
+                    $this->SetXY($barX, $barY + ($contador * -1.5));
+                    $this->SetDrawColor($datosLineasHorizontales[$i]['color']['r'], $datosLineasHorizontales[$i]['color']['g'], $datosLineasHorizontales[$i]['color']['b']);
+                    $this->Line($chartBoxX + $chartBoxWidth, $barY, $chartBoxX, $barY);
+                    $this->SetX($chartBoxX + $chartBoxWidth + 1 + $indentar);
+                    if ($indentar != 0) {
+                        $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                    } else {
+                        $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                    }
+
+                    $this->SetXY($x, $y);
+                    $barXPos++;
+                }
+            } else if ($definirMinimoMaximo == true) {
+                $minDate = $this->cacularDatoMinimo($datosLineasHorizontales);
+                if ($minDate < $newDateMin) {
+                    die('Mensaje de pixelProgramer: Lo sentimos el dato con valor: ' . $minDate . ' en las lineas horizontales(datos) es menor al valor minimo de las barras: ' . $newDateMin . '.');
+                }
+                $barXPos = 0;
+                for ($i = 0; $i < count($datosLineasHorizontales); $i++) {
+                    //Ancho de la barra
+                    $constante = $newDateMin * $yAxisUnits;
+                    $barHeght = $datosLineasHorizontales[$i]['value'] * $yAxisUnits - $constante;
+                    //posicion en x de la barra
+                    $barX = ($xLabelWidth / 2) + ($xLabelWidth * $barXPos);
+                    $barX = $barX - ($barWidth / 2);
+                    $barX = $barX + $chartBoxX;
+                    //posicion en y de la barra
+                    $barY = $chartBoxHeicht - $barHeght;
+                    $barY = $barY + $chartBoxY;
+                    //Pintar la linea horizontal
+                    $x = $this->GetX();
+                    $y = $this->GetY();
+                    $contador = 1;
+                    $indentar = 0;
+                    for ($n = 0; $n < $i; $n++) {
+                        if ($datosLineasHorizontales[$i]['value'] == $datosLineasHorizontales[$n]['value']) {
+                            $contador -= 2.5;
+                            $indentar = 2;
+                        }
+                    };
+                    $this->SetXY($barX, $barY + ($contador * -1.5));
+                    $this->SetDrawColor($datosLineasHorizontales[$i]['color']['r'], $datosLineasHorizontales[$i]['color']['g'], $datosLineasHorizontales[$i]['color']['b']);
+                    $this->Line($chartBoxX + $chartBoxWidth, $barY, $chartBoxX, $barY);
+                    $this->SetX($chartBoxX + $chartBoxWidth + 1 + $indentar);
+                    if ($indentar != 0) {
+                        $this->Cell($chartRightPadding - 4, 5, '- ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                    } else {
+                        $this->Cell($chartRightPadding - 4, 5, '* ' . $datosLineasHorizontales[$i]['label'] . ': ' . $datosLineasHorizontales[$i]['value'], 0, 0, 'L');
+                    }
+
+                    $this->SetXY($x, $y);
+                    $barXPos++;
+                }
             }
+
         }
 
         //Labels de los ejes
@@ -368,8 +464,44 @@ class Graficos extends TCPDF
             $this->SetXY($chartBoxX, $chartY + $chartHeight - ($chartBottomPaddig / 2));
             $this->Cell($chartBoxWidth, 10, $tituloEjeX, 0, 0, 'C');
         }
+        //pintarLeyenda
+        if ($pintarLeyendaGrafica == true) {
+            $this->pintarLeyenda($datosBarras, $tipoColorBarras, $chartBoxX,$chartY + $chartHeight - ($chartBottomPaddig / 2));
+        }
 
-        // var_dump($datosLineasHorizontales);
+    }
+
+    function pintarLeyenda($datos, $tipo, $x,$y)
+    {
+        $this->StopTransform();
+        $this->SetXY($x,$y+13);
+        $this->SetLineWidth(0.01);
+        $this->SetDrawColor(000,000,000);
+        $color = $this->colorColumnas($tipo);
+        for ($i = 0; $i < count($datos); $i++) {
+            if ($i < count($color)) {
+                $random = $color[$i];
+            } else {
+                $random = end($arregloColores);
+            }
+            $this->SetFont('Times','',12);
+            $tamañoTexto1 = $this->GetStringWidth($datos[$i]['label'],'Times','',12)+2;
+            $tamañoTexto2 = $this->GetStringWidth($datos[$i]['value'],'Times','',12)+2;
+            if ($tamañoTexto1>$tamañoTexto2){
+                $tamañoTexto=$tamañoTexto1;
+            }else
+            {
+                $tamañoTexto=$tamañoTexto2;
+            }
+
+            $this->Image(__DIR__ . '../../public/imagenes_estandar/barras_graficas/' . $random . '.jpg', $this->GetX(), $this->GetY(), $tamañoTexto, 3,
+                'jpg', '');
+            $this->SetXY($this->GetX(),$this->GetY()+4);
+            $this->Cell($tamañoTexto,5,$datos[$i]['label'],1,0,'C');
+            $this->SetXY($this->GetX()-$tamañoTexto,$this->GetY()+5.01000);
+            $this->Cell($tamañoTexto,5,$datos[$i]['value'],1,0,'C');
+            $this->SetXY($this->GetX()+2,$y+13);
+        }
     }
 
     function cacularDatoMaximo($arregloDatos)
@@ -377,6 +509,18 @@ class Graficos extends TCPDF
         $datosMax = 1;
         for ($i = 0; $i < count($arregloDatos); $i++) {
             if ($arregloDatos[$i]['value'] > $datosMax) {
+                $datosMax = $arregloDatos[$i]['value'];
+            }
+
+        }
+        return $datosMax;
+    }
+
+    function cacularDatoMinimo($arregloDatos)
+    {
+        $datosMax = $arregloDatos[0]['value'];
+        for ($i = 0; $i < count($arregloDatos); $i++) {
+            if ($arregloDatos[$i]['value'] < $datosMax) {
                 $datosMax = $arregloDatos[$i]['value'];
             }
 

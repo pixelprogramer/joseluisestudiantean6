@@ -67,7 +67,72 @@ class conexMsql {
 
 
 }
+class conexionNubeMysql {
 
+    private $host;
+    private $usuario;
+    private $contrasena;
+    private $nombreBD;
+    private $validacionConexion;
+
+    function __construct() {
+        //produccion
+        $this->host = "138.128.182.138";
+        //Local
+        // $this->host = "192.168.0.12";
+        $this->usuario = "joseluis";
+        $this->contrasena = "Treseditores2018";
+        $this->nombreBD = "joseluis";
+        $this->validacionConexion = mysqli_connect($this->host, $this->usuario, $this->contrasena, $this->nombreBD) or die('Connection failed !!' . mysqli_connect_error());
+        mysqli_set_charset($this->validacionConexion,'utf8');
+    }
+    public function cadenaConexion ()
+    {
+        return $this->validacionConexion;
+    }
+
+    public function consultaComplejaNorAso($sql)
+    {
+        $result = mysqli_query($this->validacionConexion, $sql);
+        if (mysqli_num_rows($result)>0)
+        {
+            return mysqli_fetch_assoc($result);
+        }else
+        {
+            return 0;
+        }
+
+    }
+    public function consultaComplejaAso($sql)
+    {
+        $result = mysqli_query($this->validacionConexion, $sql);
+        if (mysqli_num_rows($result)>0)
+        {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $data[] = $row;
+            }
+        }else
+        {
+            $data=0;
+        }
+
+        return $data;
+    }
+    public function consultaComplejaNor($sql)
+    {
+        $consulta= mysqli_query($this->validacionConexion, $sql);
+        return $consulta;
+    }
+    public function consultaSimple($sql) {
+        mysqli_query($this->validacionConexion, $sql);
+    }
+    public function consultaSimpleReturnId($sql) {
+        mysqli_query($this->validacionConexion, $sql);
+        return $this->validacionConexion->insert_id;
+    }
+
+
+}
 
 use Symfony\Component\Yaml\Yaml;
 

@@ -53,4 +53,5 @@ require 'App/componentes/distribuidor/nuevoPedido.php';
 require 'App/componentes/calificacion/indicadoresCalificacion.php';
 require 'App/componentes/calificacion/almacen.php';
 require 'App/componentes/comercial/premarcadovscalificado.php';
+require 'App/componentes/calificacion/subir_Archivo/subir_archivos.php';
 $app->run();

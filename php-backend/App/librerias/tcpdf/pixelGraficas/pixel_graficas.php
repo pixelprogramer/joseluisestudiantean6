@@ -2,6 +2,29 @@
 
 class Graficos extends TCPDF
 {
+    /**
+     * @param null $tipoColorBarras
+     * @param $datosBarras
+     * @param null $datosLineasHorizontales
+     * @param int $ancho
+     * @param $alto
+     * @param int $anchoBarra
+     * @param int $iteradorEjeY
+     * @param bool $mostrarTextoEjeY
+     * @param $tituloEjeY
+     * @param bool $mostrarTextoEjeX
+     * @param $tituloEjeX
+     * @param string $horientacionTextoEjeY
+     * @param bool $pintarBordeExternoGrafica
+     * @param bool $pintarValoresSuperiorxBarra
+     * @param bool $pintarLeyendaGrafica
+     * @param bool $pintarValoresSuperiorGrafica
+     * @param bool $lineasHorizontales
+     * @param bool $lineasHorizontalesDatos
+     * @param bool $definirMinimoMaximo
+     * @param int $newDateMax
+     * @param int $newDateMin
+     */
     function generarGraficaDeBarras($tipoColorBarras = null,
                                     $datosBarras,
                                     $datosLineasHorizontales = null,

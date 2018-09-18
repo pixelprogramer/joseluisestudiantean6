@@ -143,7 +143,7 @@ $app->post('/calificacion/filtrarGrupo', function () use ($app) {
         if ($token == true) {
             $descripcion = $app->request->post('filtro',null);
             $conexion =  new conexPG();
-            $sql = "select * from public.curso cur where cur.cursdescripv like '%$descripcion%';";
+            $sql = "select * from public.curso cur where cur.cursdescripv like '%$descripcion%' and cur.cur_cursidn is null;";
             $r = $conexion->consultaComplejaAso($sql);
             $data = [
                 'code'=>'LTE-001',

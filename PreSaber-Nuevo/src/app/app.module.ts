@@ -50,12 +50,13 @@ import {ValidarPaginaComponent} from "./components/validar-pagina/validar-pagina
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { IndicadorCalificacionPremarcadoVsComponent } from './components/comercial/indicador-calificacion-premarcado-vs/indicador-calificacion-premarcado-vs.component';
+import { SubirArchivoResultadosComponent } from './components/calificacion/subir-archivo-resultados/subir-archivo-resultados.component';
 
 
 @NgModule({
   declarations: [
 
-  ],
+  SubirArchivoResultadosComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

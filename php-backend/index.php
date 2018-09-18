@@ -27,7 +27,10 @@ require 'App/librerias/email/plantillas.pixel.php';
 require 'vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Spreadsheet.php';
 require 'vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Writer/Xlsx.php';
 require 'vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Reader/IReader.php';
-require 'vendor/tecnickcom/tcpdf/examples/tcpdf_include.php';
+require 'App/librerias/tcpdf/tecnickcom/tcpdf/tcpdf.php';
+require 'App/librerias/tcpdf/pixelGraficas/pixel_graficas.php';
+require 'App/librerias/tcpdf/pixelGraficas/pixel_configuracionInicial.php';
+
 
 //Componentes
 require 'App/componentes/traladoUsuarios.php';

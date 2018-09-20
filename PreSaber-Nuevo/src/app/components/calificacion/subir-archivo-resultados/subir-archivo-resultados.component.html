@@ -1,3 +1,19 @@
-<p>
-  subir-archivo-resultados works!
-</p>
+<app-card title="Subir archivo">
+
+  <form #formsubirresultados="ngForm" (ngSubmit)="onSubmit()">
+
+    <strong><label>Seleccionar el archivo .RAR</label></strong>
+    <br>
+    <input type = "file"  (change)="fileChangeEvent($event)"/>
+    <br>
+    <br>
+    <strong><label>Numero de pedido:</label></strong>
+    <input type="text" #name="ngModel" name="name" [(ngModel)]="subirresultado.name" class="form-control">
+    <br>
+    <strong><label>Grados:</label></strong>
+    <input type="text" #descripction="ngModel" name="description" [(ngModel)]="subirresultado.descripction" class="form-control">
+    <br>
+    <input type="submit" value="Subir" class="btn btnPropio">
+
+  </form>
+</app-card>

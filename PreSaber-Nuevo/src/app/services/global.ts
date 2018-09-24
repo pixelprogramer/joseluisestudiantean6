@@ -19,5 +19,5 @@ export var GLOBAL = {
 
   //Local Desarrollo nelson
   //url: 'http://localhost/joseluisestudiantean6/trunk/php-backend/index.php/',
-  //urlFiles: 'http://localhost/joseluisestudiantean6/trunk/php-backend//App/public'
+  //urlFiles: 'http://localhost/joseluisestudiantean6/trunk/php-backend/App/public'
 };

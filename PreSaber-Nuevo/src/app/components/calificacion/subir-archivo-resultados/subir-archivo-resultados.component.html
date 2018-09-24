@@ -1,19 +1,51 @@
+<ng2-toasty [position]="position"></ng2-toasty>
 <app-card title="Subir archivo">
+  <div class="col-md-12" style="margin-top: 5px" id="loaderSubirArchivos" >
+    <div class="align-content-center">
+      <div class="preloader3" style="height: 0px; padding-top: 20px" id="loader1">
+        <div class="circ1 loader-warning"></div>
+        <div class="circ2 loader-warning"></div>
+        <div class="circ3 loader-warning"></div>
+        <div class="circ4 loader-warning"></div>
+      </div>
+    </div>
+  </div>
+<div class="row" style="margin-top: 15px;">
+  <div class="col-md-12">
+    <h4 class="sub-title">Subir archivo</h4>
+    <input type="file" (change)="fileChangeEvent($event)"/>
+  </div>
+</div>
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-md-12">
+      <h4 class="sub-title">Numero de pedido</h4>
+      <input  id="name" #name="ngModel" name="name" [(ngModel)]="objSubirResultados.name" class="form-control" placeholder="seleccionar archivo" value="Seleccionar archivo">
+    </div>
+  </div>
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-md-12">
+      <h4 class="sub-title">Grados</h4>
+      <input  #descripction="ngModel" name="description" [(ngModel)]="objSubirResultados.description"
+             class="form-control">
+    </div>
+  </div>
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-md-12">
+      <button class="btn btnPropio" id="btnSubir" style="width: 100%" (click)="subirArchivos()">Subir</button>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 15px;">
+    <div class="col-md-12">
+      <button class="btn btnPropio" id="btnActualizar" style="width: 100%" (click)="actualizarArchivos()">Actualizar</button>
+    </div>
+  </div>
 
-  <form #formsubirresultados="ngForm" (ngSubmit)="onSubmit()">
+  <div  class="row" style="margin-top: 15px">
+    <div class="col-md-12">
+      <h4 class="sub-title">Visualizador de PDF</h4>
+      <div id="seccioPdf">
 
-    <strong><label>Seleccionar el archivo .RAR</label></strong>
-    <br>
-    <input type = "file"  (change)="fileChangeEvent($event)"/>
-    <br>
-    <br>
-    <strong><label>Numero de pedido:</label></strong>
-    <input type="text" #name="ngModel" name="name" [(ngModel)]="subirresultado.name" class="form-control">
-    <br>
-    <strong><label>Grados:</label></strong>
-    <input type="text" #descripction="ngModel" name="description" [(ngModel)]="subirresultado.descripction" class="form-control">
-    <br>
-    <input type="submit" value="Subir" class="btn btnPropio">
-
-  </form>
+      </div>
+    </div>
+  </div>
 </app-card>

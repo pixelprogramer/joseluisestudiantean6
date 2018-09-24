@@ -1,7 +1,6 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import  {Observable} from "rxjs/Observable";
 import {Injectable} from "@angular/core";
-import { Subirresultado } from "../../models/sisCalificacion/subirresultado";
 import {GLOBAL} from "../global";
 
 @Injectable()
@@ -37,8 +36,8 @@ export class CalificacionService {
     return this._http.post(this.url + 'calificacion/generarIndicadores', params, {headers: headers});
   }
 
-  subirresultadosnube(token, params: Array<string>, files: Array<File>, data = null) {
-    let urlF = this.url + 'uploader-file';
+  subirResultadosArchivo(token, params: Array<string>, files: Array<File>, data = null) {
+    let urlF = this.url + 'calificacion/subirArchivoResultado';
     return new Promise((resolve, reject) => {
       var formData: any = new FormData();
       var xhr = new XMLHttpRequest();
@@ -53,8 +52,6 @@ export class CalificacionService {
       if (data != null)
         var json = JSON.stringify(data);
       formData.append('json', json);
-
-
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
@@ -69,5 +66,34 @@ export class CalificacionService {
     });
 
   }
+  actualizarResultadosArchivo(token, params: Array<string>, files: Array<File>, data = null) {
+    let urlF = this.url + 'calificacion/actualizarArchivoResultado';
+    return new Promise((resolve, reject) => {
+      var formData: any = new FormData();
+      var xhr = new XMLHttpRequest();
 
+      if (files != undefined) {
+        var name_file_input = params[0];
+        for (var i = 0; i < files.length; i++) {
+          formData.append(name_file_input, files[i], files[i].name);
+        }
+      }
+      formData.append('token', token);
+      if (data != null)
+        var json = JSON.stringify(data);
+      formData.append('json', json);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            resolve(JSON.parse(xhr.response));
+          } else {
+            reject(xhr.response);
+          }
+        }
+      }
+      xhr.open("POST", urlF, true);
+      xhr.send(formData);
+    });
+
+  }
 }

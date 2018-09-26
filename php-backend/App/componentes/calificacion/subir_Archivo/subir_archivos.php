@@ -95,11 +95,20 @@ $app->post('/calificacion/actualizarArchivoResultado', function () use ($app) {
                     $fecha_hora_actual = date('Y-m-d');
                     $file = (isset($_FILES['upload'])) ? $_FILES['upload'] : null;
                     $nombreArchivo = time();
+                    /*
                     pi_poMove('/upload-file/resultados/', $file, $nombreArchivo);
+                    */
                     $nombre_completo = $nombreArchivo . '.' . pi_poExtenssion($file);
                     $tipo = "Tipo: " . pi_poExtenssion($file);
                     $query = "update archivos set name='$name', description='$description',ruta='$nombre_completo',tipo='$tipo' where id = '$id';";
                     $conexion->consultaSimple($query);
+                    //FTP
+                    $connection = ftp_connect('138.128.182.138', '21');
+                    $login = ftp_login($connection, 'root', 'ApoloSistemas_2016$');
+                    $destination_file = "/filesjl/upload/".$nombreArchivo.'.'.pi_poExtenssion($file);
+                    $source_file = $file['tmp_name'];
+                    ftp_pasv($connection, true);
+                    $upload = ftp_put($connection, $destination_file, $source_file, FTP_BINARY);
                     $r = reporteEvidenciaRepositorio($name);
                     $data = [
                         'code' => 'LTE-001',
